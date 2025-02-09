@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CovoiturageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -39,6 +41,17 @@ class Covoiturage
     #[ORM\ManyToOne(inversedBy: 'covoituragesVoiture')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Voiture $voiture = null;
+
+    /**
+     * @var Collection<int, Avis>
+     */
+    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'covoiturage')]
+    private Collection $avis;
+
+    public function __construct()
+    {
+        $this->avis = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -137,6 +150,36 @@ class Covoiturage
     public function setVoiture(?Voiture $voiture): static
     {
         $this->voiture = $voiture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $avi->setCovoiturage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            // set the owning side to null (unless already changed)
+            if ($avi->getCovoiturage() === $this) {
+                $avi->setCovoiturage(null);
+            }
+        }
 
         return $this;
     }

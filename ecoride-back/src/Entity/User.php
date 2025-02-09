@@ -71,10 +71,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Covoiturage::class, mappedBy: 'conducteur')]
     private Collection $covoituragesConducteur;
 
+    /**
+     * @var Collection<int, Avis>
+     */
+    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'passager')]
+    private Collection $avisPassager;
+
+    /**
+     * @var Collection<int, Avis>
+     */
+    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'conducteur')]
+    private Collection $avisConducteur;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
         $this->covoituragesConducteur = new ArrayCollection();
+        $this->avisPassager = new ArrayCollection();
+        $this->avisConducteur = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -302,6 +316,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($covoituragesConducteur->getConducteur() === $this) {
                 $covoituragesConducteur->setConducteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvisPassager(): Collection
+    {
+        return $this->avisPassager;
+    }
+
+    public function addAvisPassager(Avis $avisPassager): static
+    {
+        if (!$this->avisPassager->contains($avisPassager)) {
+            $this->avisPassager->add($avisPassager);
+            $avisPassager->setPassager($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvisPassager(Avis $avisPassager): static
+    {
+        if ($this->avisPassager->removeElement($avisPassager)) {
+            // set the owning side to null (unless already changed)
+            if ($avisPassager->getPassager() === $this) {
+                $avisPassager->setPassager(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvisConducteur(): Collection
+    {
+        return $this->avisConducteur;
+    }
+
+    public function addAvisConducteur(Avis $avisConducteur): static
+    {
+        if (!$this->avisConducteur->contains($avisConducteur)) {
+            $this->avisConducteur->add($avisConducteur);
+            $avisConducteur->setConducteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAvisConducteur(Avis $avisConducteur): static
+    {
+        if ($this->avisConducteur->removeElement($avisConducteur)) {
+            // set the owning side to null (unless already changed)
+            if ($avisConducteur->getConducteur() === $this) {
+                $avisConducteur->setConducteur(null);
             }
         }
 
