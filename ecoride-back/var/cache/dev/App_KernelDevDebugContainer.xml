@@ -360,7 +360,23 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Repository\ConfigurationRepository" class="App\Repository\ConfigurationRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="App\Repository\CovoiturageRepository" class="App\Repository\CovoiturageRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\DisposeRepository" class="App\Repository\DisposeRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\MarqueRepository" class="App\Repository\MarqueRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\ParametreRepository" class="App\Repository\ParametreRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -5217,7 +5233,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.JU4xesl"/>
+      <argument type="service" id=".service_locator.XBXquKO"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -7247,8 +7263,16 @@
     </service>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AvisRepository" class="App\Repository\AvisRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\AvisRepository" class="App\Repository\AvisRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ConfigurationRepository" class="App\Repository\ConfigurationRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\ConfigurationRepository" class="App\Repository\ConfigurationRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\CovoiturageRepository" class="App\Repository\CovoiturageRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\CovoiturageRepository" class="App\Repository\CovoiturageRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\DisposeRepository" class="App\Repository\DisposeRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\DisposeRepository" class="App\Repository\DisposeRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\MarqueRepository" class="App\Repository\MarqueRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\MarqueRepository" class="App\Repository\MarqueRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ParametreRepository" class="App\Repository\ParametreRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\ParametreRepository" class="App\Repository\ParametreRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\VoitureRepository" class="App\Repository\VoitureRepository" autowire="true" abstract="true"/>
@@ -8094,11 +8118,15 @@
         <argument key="turbo.doctrine.event_listener" type="service_closure" id="turbo.doctrine.event_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.JU4xesl" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.XBXquKO" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\AvisRepository" type="service_closure" id="App\Repository\AvisRepository"/>
+        <argument key="App\Repository\ConfigurationRepository" type="service_closure" id="App\Repository\ConfigurationRepository"/>
         <argument key="App\Repository\CovoiturageRepository" type="service_closure" id="App\Repository\CovoiturageRepository"/>
+        <argument key="App\Repository\DisposeRepository" type="service_closure" id="App\Repository\DisposeRepository"/>
+        <argument key="App\Repository\MarqueRepository" type="service_closure" id="App\Repository\MarqueRepository"/>
+        <argument key="App\Repository\ParametreRepository" type="service_closure" id="App\Repository\ParametreRepository"/>
         <argument key="App\Repository\UserRepository" type="service_closure" id="App\Repository\UserRepository"/>
         <argument key="App\Repository\VoitureRepository" type="service_closure" id="App\Repository\VoitureRepository"/>
       </argument>
