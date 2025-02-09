@@ -65,9 +65,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'utilisateur')]
     private Collection $voitures;
 
+    /**
+     * @var Collection<int, Covoiturage>
+     */
+    #[ORM\OneToMany(targetEntity: Covoiturage::class, mappedBy: 'conducteur')]
+    private Collection $covoituragesConducteur;
+
     public function __construct()
     {
         $this->voitures = new ArrayCollection();
+        $this->covoituragesConducteur = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -265,6 +272,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($voiture->getUtilisateur() === $this) {
                 $voiture->setUtilisateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Covoiturage>
+     */
+    public function getCovoituragesConducteur(): Collection
+    {
+        return $this->covoituragesConducteur;
+    }
+
+    public function addCovoituragesConducteur(Covoiturage $covoituragesConducteur): static
+    {
+        if (!$this->covoituragesConducteur->contains($covoituragesConducteur)) {
+            $this->covoituragesConducteur->add($covoituragesConducteur);
+            $covoituragesConducteur->setConducteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCovoituragesConducteur(Covoiturage $covoituragesConducteur): static
+    {
+        if ($this->covoituragesConducteur->removeElement($covoituragesConducteur)) {
+            // set the owning side to null (unless already changed)
+            if ($covoituragesConducteur->getConducteur() === $this) {
+                $covoituragesConducteur->setConducteur(null);
             }
         }
 
