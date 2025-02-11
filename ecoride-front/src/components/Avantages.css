@@ -1,0 +1,26 @@
+/* src/components/Avantages.css */.avantages {
+    background-color: #f8f9fa;
+    padding: 3rem 0;
+  }.avantages h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }.avantages.avantage {
+    text-align: center;
+    margin-bottom: 2rem;
+  }.avantages.avantage h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }.avantages.avantage p {
+    font-size: 1rem;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+  .avantages.avantage {
+      margin-bottom: 1.5rem;
+    }
+  
+  .avantages.avantage h3 {
+      font-size: 1.2rem;
+    }
+  }

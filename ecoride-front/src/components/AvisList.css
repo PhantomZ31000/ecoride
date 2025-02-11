@@ -1,0 +1,18 @@
+/* src/components/AvisList.css */.avis-list {
+    margin-top: 2rem; /* Marge supérieure */
+}.avis-list.avis {
+  border: 1px solid #dee2e6; /* Bordure */
+  padding: 1rem; /* Espacement interne */
+  margin-bottom: 1rem; /* Marge inférieure */
+  border-radius: 0.25rem; /* Coins arrondis */
+}.avis-list.avis.auteur {
+  font-weight: bold; /* Style du nom de l'auteur */
+}.avis-list.avis.date {
+  font-size: 0.9rem; /* Taille de la date */
+  color: #6c757d; /* Couleur de la date */
+}.avis-list.avis.note {
+  font-size: 1.2rem; /* Taille de la note */
+  color: #ffc107; /* Couleur de la note */
+}.avis-list.avis.commentaire {
+  margin-top: 0.5rem; /* Marge supérieure du commentaire */
+}

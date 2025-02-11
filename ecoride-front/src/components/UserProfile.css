@@ -1,0 +1,18 @@
+/* src/components/UserProfile.css */.user-profile {
+    margin-bottom: 2rem; /* Marge inférieure */
+}.user-profile.image-container {
+  width: 150px; /* Largeur de l'image */
+  height: 150px; /* Hauteur de l'image */
+  overflow: hidden; /* Masquer le débordement de l'image */
+  border-radius: 50%; /* Rendre l'image ronde */
+  margin-bottom: 1rem; /* Marge inférieure de l'image */
+}.user-profile.image-container img {
+  width: 100%; /* Ajuster l'image à la largeur du conteneur */
+  height: 100%; /* Ajuster l'image à la hauteur du conteneur */
+  object-fit: cover; /* Couvrir toute la zone du conteneur */
+}.user-profile h2 {
+  font-size: 2rem; /* Taille du titre */
+  margin-bottom: 0.5rem; /* Marge inférieure du titre */
+}.user-profile p {
+  font-size: 1rem; /* Taille du texte */
+}

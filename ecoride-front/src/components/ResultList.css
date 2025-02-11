@@ -1,0 +1,5 @@
+/* src/components/ResultList.css */.result-list {
+    display: grid; /* Utilisation d'une grille pour l'affichage des résultats */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Colonnes responsives */
+    gap: 1.5rem; /* Espacement entre les cartes */
+  }

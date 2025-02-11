@@ -1,13 +1,25 @@
+/* src/index.css */
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+a {
+  color: #007bff; /* Couleur des liens */
+  text-decoration: none; /* Supprimer le soulignement des liens */
+}
+
+a:hover {
+  color: #0056b3; /* Couleur des liens au survol */
+  text-decoration: underline; /* Ajouter un soulignement au survol */
+}.btn-primary {
+  background-color: #007bff; /* Couleur de fond du bouton */
+  border-color: #007bff; /* Couleur de la bordure du bouton */
+}.btn-primary:hover {
+  background-color: #0069d9; /* Couleur de fond du bouton au survol */
+  border-color: #0062cc; /* Couleur de la bordure du bouton au survol */
 }

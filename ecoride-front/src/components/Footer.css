@@ -1,0 +1,30 @@
+/* src/components/Footer.css */
+
+footer {
+    background-color: #343a40; /* Couleur de fond du footer */
+    color: #fff; /* Couleur du texte */
+    padding: 2rem 0; /* Espacement interne */
+  }
+  
+  footer h5 {
+    margin-bottom: 1rem; /* Marge inférieure du titre */
+  }
+  
+  footer ul {
+    list-style: none; /* Supprimer les puces de la liste */
+    padding: 0; /* Supprimer le padding de la liste */
+  }
+  
+  footer li {
+    margin-bottom: 0.5rem; /* Marge inférieure de chaque élément de la liste */
+  }
+  
+  footer a {
+    color: #fff; /* Couleur des liens */
+    text-decoration: none; /* Supprimer le soulignement des liens */
+  }
+  
+  footer a:hover {
+    color: #ffc107; /* Couleur des liens au survol */
+    text-decoration: underline; /* Ajouter un soulignement au survol */
+  }

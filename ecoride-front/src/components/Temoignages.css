@@ -1,0 +1,22 @@
+/* src/components/Temoignages.css */.temoignages {
+    background-color: #f8f9fa;
+    padding: 3rem 0;
+  }.temoignages h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }.temoignages.temoignage {
+    text-align: center;
+    margin-bottom: 2rem;
+  }.temoignages.temoignage p {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }.temoignages.temoignage.auteur {
+    font-style: italic;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+  .temoignages.temoignage {
+      margin-bottom: 1.5rem;
+    }
+  }
