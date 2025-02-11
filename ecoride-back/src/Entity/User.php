@@ -9,9 +9,32 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['user:list']]
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['user:item']]
+        ),
+        new Post(
+            denormalizationContext: ['groups' => ['user:create']],
+            normalizationContext: ['groups' => ['user:item']]
+        ),
+    ],
+    filters: [SearchFilter::class],
+)]
+#[ApiFilter(SearchFilter::class, properties: ['pseudo' => 'partial'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -19,9 +42,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    private?string $pseudo = null;
-
+    #[Groups(['user:list', 'user:item', 'user:create'])]
+    protected $pseudo;
+    
     #[ORM\Column(length: 50, nullable: true)]
     private?string $nom = null;
 
@@ -44,8 +67,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Choice(choices: ['conducteur', 'passager', 'les_deux'])]
     private $role;
 
-    #[ORM\Column(length: 180)]
-    private ?string $email = null;
+    #[Groups(['user:list', 'user:item'])]
+    protected $email;
+    
 
     /**
      * @var list<string> The user roles

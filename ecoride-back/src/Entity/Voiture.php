@@ -7,8 +7,35 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VoitureRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['voiture:list']]
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['voiture:item']]
+        ),
+        new Post(
+            denormalizationContext: ['groups' => ['voiture:create']],
+            normalizationContext: ['groups' => ['voiture:item']]
+        ),
+        new Put(
+            denormalizationContext: ['groups' => ['voiture:update']]
+        ),
+        new Delete()
+    ],
+    filters: [SearchFilter::class],
+)]
+#[ApiFilter(SearchFilter::class, properties: ['modele' => 'partial', 'marque' => 'partial'])]
 class Voiture
 {
     #[ORM\Id]
@@ -16,8 +43,8 @@ class Voiture
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $modele = null;
+    #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
+    protected $modele;
 
     #[ORM\Column(length: 255)]
     private ?string $immatriculation = null;

@@ -7,8 +7,38 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CovoiturageRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['covoiturage:list']],
+            paginationItemsPerPage: 10,
+            paginationMaximumItemsPerPage: 50,
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['covoiturage:item']]
+        ),
+        new Post(
+            denormalizationContext: ['groups' => ['covoiturage:create']],
+            normalizationContext: ['groups' => ['covoiturage:item']]
+        ),
+        new Put(
+            denormalizationContext: ['groups' => ['covoiturage:update']]
+        ),
+        new Delete()
+    ],
+    filters: [SearchFilter::class, RangeFilter::class],
+)]
+#[ApiFilter(SearchFilter::class, properties: ['lieu_depart' => 'partial', 'lieu_arrivee' => 'partial'])]
+#[ApiFilter(RangeFilter::class, properties: ['prix'])]
 class Covoiturage
 {
     #[ORM\Id]
@@ -16,8 +46,8 @@ class Covoiturage
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $lieu_depart = null;
+    #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
+    protected $lieu_depart;
 
     #[ORM\Column(length: 255)]
     private ?string $lieu_arrivee = null;

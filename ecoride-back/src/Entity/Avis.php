@@ -5,8 +5,31 @@ namespace App\Entity;
 use App\Repository\AvisRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AvisRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['avis:list']]
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['avis:item']]
+        ),
+        new Post(
+            denormalizationContext: ['groups' => ['avis:create']],
+            normalizationContext: ['groups' => ['avis:item']]
+        ),
+    ],
+    filters: [SearchFilter::class],
+)]
+#[ApiFilter(SearchFilter::class, properties: ['commentaire' => 'partial'])]
 class Avis
 {
     #[ORM\Id]
@@ -14,8 +37,8 @@ class Avis
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $note = null;
+    #[Groups(['avis:list', 'avis:item', 'avis:create'])]
+    protected $note;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $commentaire = null;
