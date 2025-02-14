@@ -1,37 +1,75 @@
-/* src/components/HeroSection.css */.hero {
-    background-color: #f8f9fa;
-    padding: 3rem 0;
-    text-align: center;
-  }.hero h1 {
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }.hero p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-  }.hero.btn-primary {
-    padding: 0.75rem 1.5rem;
-    font-size: 1.1rem;
-  }
-  
-  /* Responsive design */
-  @media (min-width: 768px) {
+.hero {
+  min-height: 100vh; /* Utilisation de min-height pour éviter l'espace blanc */
+  background-color: #f8f9fa;
+  padding: 3rem 0;
+  text-align: center;
+  position: relative;
+  display: flex; /* Activation de Flexbox */
+  flex-direction: column; /* Alignement vertical des éléments */
+  justify-content: center; /* Centrage vertical du contenu */
+  align-items: center; /* Centrage horizontal du contenu */
+  background-image: url('../images/mainpage1.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero::before { /* Ajout d'un pseudo-élément pour l'image de fond */
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../images/mainpage1.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: -1; /* Placer l'image derrière le contenu */
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.hero .logo {
+  max-width: 200px;
+  margin-bottom: 1rem;
+}
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  /* ... autres styles de bouton ... */
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+@media (min-width: 768px) {
   .hero {
-      text-align: left;
-    }
-  
-  .hero.col-md-6 {
-      display: flex;
-      align-items: center;
-    }
+    text-align: left;
+    align-items: flex-start; /* Alignement à gauche sur les grands écrans */
   }
-  
-  @media (max-width: 767px) {
+
+  .hero .col-md-6 { /* Ajustement pour Bootstrap si nécessaire */
+    display: block; /* Supprimer le flexbox de la colonne si utilisé par Bootstrap */
+  }
+}
+
+@media (max-width: 767px) {
   .hero h1 {
-      font-size: 2rem;
-    }
-  
-  .hero p {
-      font-size: 1rem;
-    }
+    font-size: 2rem;
   }
+
+  .hero p {
+    font-size: 1rem;
+  }
+}

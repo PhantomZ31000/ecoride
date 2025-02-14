@@ -1,19 +1,112 @@
-/* src/components/NavigationBar.css */.navbar {
+/* ==========================================================================
+   Navbar Styles (Adapté pour react-bootstrap)
+   ========================================================================== */
+
+   .eco-navbar {
     background-color: #f8f9fa;
-    padding: 1rem 0;
-  }.navbar-brand {
-    font-weight: bold;
-  }.navbar-nav.nav-link {
-    color: #343a40;
-    margin-left: 1.5rem;
-  }.navbar-nav.nav-link:hover {
+    padding: 1rem 2rem;
+}
+
+.navbar-brand {
+
+}
+
+.navbar-brand img {
+    max-width: 150px;
+    max-height: 40px;
+    vertical-align: middle;
+}
+
+.navbar-nav {
+
+}
+
+/* --------------------------------------------------------------------------
+     Individual Links (.nav-link) - Styles pour l'effet bouton
+     -------------------------------------------------------------------------- */
+.nav-link {
+    color: #333333;
+    font-family: 'Arial', sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0 1.5rem;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    border: 1px solid transparent;
+    border-radius: 20px;
+}
+
+.nav-link:hover {
     color: #007bff;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 992px) {
-  .navbar-nav.nav-link {
-      margin-left: 0;
-      padding: 0.5rem 1rem;
+    background-color: #f0f0f0;
+    border-color: #007bff;
+}
+
+.nav-link.active {
+    color: #007bff;
+    font-weight: bold;
+    background-color: #f0f0f0;
+    border-color: #007bff;
+}
+
+/* --------------------------------------------------------------------------
+     Buttons (Inscription & Connexion) (.btn) -  Vos classes personnalisées
+     -------------------------------------------------------------------------- */
+.btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 20px;
+}
+
+.btn-inscription {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-inscription:hover {
+    background-color: #0056b3;
+}
+
+.btn-connexion {
+    background-color: transparent;
+    color: #333333;
+    border: 1px solid #333333;
+    margin-right: 1.5rem;
+}
+
+.btn-connexion:hover {
+    background-color: #f0f0f0;
+    color: #000;
+    border-color: #000;
+}
+
+.logo-image {
+    max-height: 40px;
+    width: auto;
+    vertical-align: middle; /* Pour aligner verticalement le logo */
+}
+
+
+/* --------------------------------------------------------------------------
+     Mobile Navigation Styles (Media Queries)
+     -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+    .navbar-collapse {
+        text-align: center;
     }
-  }
+
+    .nav-link {
+        margin: 0.5rem 0;
+    }
+
+    .btn {
+        margin: 0.5rem 0;
+        display: block;
+        width: 100%;
+    }
+}

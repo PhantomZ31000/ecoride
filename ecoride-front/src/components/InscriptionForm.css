@@ -1,22 +1,43 @@
-/* src/components/InscriptionForm.css */.form-group {
-    margin-bottom: 1.5rem; /* Espacement entre les champs du formulaire */
-}.form-label {
-  font-weight: bold; /* Style du texte des labels */
-}.form-control {
-  border-radius: 0.25rem; /* Coins arrondis pour les champs de saisie */
-}.btn-primary {
-  background-color: #007bff; /* Couleur de fond du bouton */
-  border-color: #007bff; /* Couleur de la bordure du bouton */
-  padding: 0.75rem 1.5rem; /* Espacement interne du bouton */
-  font-size: 1.1rem; /* Taille du texte du bouton */
-}.btn-primary:hover {
-  background-color: #0069d9; /* Couleur de fond du bouton au survol */
-  border-color: #0062cc; /* Couleur de la bordure du bouton au survol */
+.inscription-form { /* Style pour le formulaire */
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  background-color: #f8f9fa; /* Arrière-plan clair */
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-control {
+  border-radius: 0.25rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-.form-group {
-    margin-bottom: 1rem; /* Espacement réduit entre les champs sur les petits écrans */
+  .inscription-form {
+      padding: 1.5rem;
+  }
+
+  .form-group {
+      margin-bottom: 1rem;
   }
 }
