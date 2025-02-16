@@ -11,7 +11,7 @@ function CreationCompteEmploye() {
     event.preventDefault();
 
     try {
-      const response = await fetch('/api/users', { // Assurez-vous que l'URL de l'API est correcte
+      const response = await fetch('http://127.0.0.1:8000/api/users', { // Assurez-vous que l'URL de l'API est correcte
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

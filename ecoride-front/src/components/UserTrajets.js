@@ -7,7 +7,7 @@ function UserTrajets() {
 
   useEffect(() => {
     // Récupérer les trajets proposés par l'utilisateur depuis l'API
-    fetch('/api/covoiturages?conducteur=1') // Remplacez 1 par l'ID de l'utilisateur connecté
+    fetch('http://127.0.0.1:8000/api/covoiturages?conducteur=1') // Remplacez 1 par l'ID de l'utilisateur connecté
     .then(response => response.json())
     .then(data => setTrajetsProposes(data));
 

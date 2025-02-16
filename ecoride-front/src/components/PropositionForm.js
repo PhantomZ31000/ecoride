@@ -15,7 +15,7 @@ function PropositionForm() {
 
   useEffect(() => {
     // Récupérer l'utilisateur connecté (remplacez 1 par l'ID de l'utilisateur connecté)
-    fetch('/api/users/1')
+    fetch('http://127.0.0.1:8000/api/users/1')
     .then(response => response.json())
     .then(data => setConducteur(data));
 

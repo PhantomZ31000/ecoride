@@ -7,7 +7,7 @@ function GraphiqueCovoiturages() {
 
   useEffect(() => {
     // Récupérer les données pour le graphique depuis l'API
-    fetch('/api/stats/covoiturages-par-jour') // Remplacez par l'URL correcte de votre API
+    fetch('http://127.0.0.1:8000/api/stats/covoiturages-par-jour') // Remplacez par l'URL correcte de votre API
     .then(response => response.json())
     .then(data => setData(data));
   },);

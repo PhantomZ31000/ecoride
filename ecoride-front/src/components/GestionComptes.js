@@ -6,7 +6,7 @@ function GestionComptes() {
 
   useEffect(() => {
     // Récupérer la liste des utilisateurs depuis l'API
-    fetch('/api/users') // Remplacez par l'URL correcte de votre API
+    fetch('http://127.0.0.1:8000/api/users') // Remplacez par l'URL correcte de votre API
     .then(response => response.json())
     .then(data => setUsers(data));
   },);

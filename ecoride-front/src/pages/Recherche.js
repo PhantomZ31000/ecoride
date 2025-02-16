@@ -9,7 +9,7 @@ function Recherche() {
 
   useEffect(() => {
     // Récupérer les covoiturages depuis l'API
-    fetch('/api/covoiturages')
+    fetch('http://127.0.0.1:8000/api/covoiturages')
     .then(response => response.json())
     .then(data => setCovoiturages(data));
   },);

@@ -6,7 +6,7 @@ function TotalCredits() {
 
   useEffect(() => {
     // Récupérer le nombre total de crédits depuis l'API
-    fetch('/api/stats/total-credits') // Remplacez par l'URL correcte de votre API
+    fetch('http://127.0.0.1:8000/api/stats/total-credits') // Remplacez par l'URL correcte de votre API
     .then(response => response.json())
     .then(data => setTotalCredits(data.total));
   },);

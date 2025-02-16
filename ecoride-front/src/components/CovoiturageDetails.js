@@ -7,7 +7,7 @@ function CovoiturageDetails({ covoiturageId }) {
 
   useEffect(() => {
     // Récupérer les informations du covoiturage depuis l'API
-    fetch(`/api/covoiturages/${covoiturageId}`)
+    fetch(`http://127.0.0.1:8000/api/covoiturages/${covoiturageId}`)
     .then(response => response.json())
     .then(data => setCovoiturage(data));
   }, [covoiturageId]);

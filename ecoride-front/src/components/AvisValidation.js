@@ -6,7 +6,7 @@ function AvisValidation() {
 
   useEffect(() => {
     // Récupérer les avis en attente de validation depuis l'API
-    fetch('/api/avis?validation=false') // Remplacez par l'URL correcte de votre API
+    fetch('http://127.0.0.1:8000/api/avis?validation=false') // Remplacez par l'URL correcte de votre API
     .then(response => response.json())
     .then(data => setAvis(data));
   },);
