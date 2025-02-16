@@ -6,18 +6,19 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(
     operations: [
@@ -39,72 +40,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(['user:list', 'user:item', 'user:create'])]
-    protected $pseudo;
-    
-    #[ORM\Column(length: 50, nullable: true)]
-    private?string $nom = null;
+    private string $email;
 
-    #[ORM\Column(length: 50, nullable: true)]
-    private?string $prenom = null;
-
-    #[ORM\Column(type: 'date', nullable: true)]
-    private?\DateTimeInterface $date_naissance = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private?string $adresse = null;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    private?string $telephone = null;
-
-    #[ORM\Column(type: Types::BLOB, nullable: true)]
-    private $photo = null;
-
-    #[ORM\Column(type: 'string', length: 20)]
-    #[Assert\Choice(choices: ['conducteur', 'passager', 'les_deux'])]
-    private $role;
-
-    #[Groups(['user:list', 'user:item'])]
-    protected $email;
-    
-
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(type: 'string')]
     private ?string $password = null;
 
-    /**
-     * @var Collection<int, Voiture>
-     */
-    #[ORM\OneToMany(targetEntity: Voiture::class, mappedBy: 'utilisateur')]
+    #[ORM\Column(type: 'string', length: 100, unique: true)]
+    #[Groups(['user:list', 'user:item', 'user:create'])]
+    private string $pseudo;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private ?string $nom = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private ?string $prenom = null;
+
+    #[ORM\Column(type: 'date', nullable: true)]
+    private ?\DateTimeInterface $date_naissance = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $adresse = null;
+
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    private ?string $telephone = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $photo = null;
+
+    #[ORM\Column(type: 'string', length: 20)]
+    #[Assert\Choice(choices: ['conducteur', 'passager', 'les_deux'])]
+    private string $role = 'passager';
+
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Voiture::class)]
     private Collection $voitures;
 
-    /**
-     * @var Collection<int, Covoiturage>
-     */
-    #[ORM\OneToMany(targetEntity: Covoiturage::class, mappedBy: 'conducteur')]
+    #[ORM\OneToMany(mappedBy: 'conducteur', targetEntity: Covoiturage::class)]
     private Collection $covoituragesConducteur;
 
-    /**
-     * @var Collection<int, Avis>
-     */
-    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'passager')]
+    #[ORM\OneToMany(mappedBy: 'passager', targetEntity: Avis::class)]
     private Collection $avisPassager;
 
-    /**
-     * @var Collection<int, Avis>
-     */
-    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'conducteur')]
+    #[ORM\OneToMany(mappedBy: 'conducteur', targetEntity: Avis::class)]
     private Collection $avisConducteur;
 
     public function __construct()
@@ -125,72 +112,52 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
-    /**
-     * @see UserInterface
-     *
-     * @return list<string>
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+
+        if ($this->getRole() === 'employe') {
+            $roles[] = 'ROLE_EMPLOYE';
+        }
 
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // Efface les données sensibles temporaires si nécessaire
     }
 
-    public function getPseudo():?string
+    public function getPseudo(): ?string
     {
         return $this->pseudo;
     }
@@ -198,11 +165,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPseudo(string $pseudo): self
     {
         $this->pseudo = $pseudo;
-
         return $this;
     }
 
-    public function getNom():?string
+    public function getNom(): ?string
     {
         return $this->nom;
     }
@@ -210,11 +176,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNom(?string $nom): self
     {
         $this->nom = $nom;
-
         return $this;
     }
 
-    public function getPrenom():?string
+    public function getPrenom(): ?string
     {
         return $this->prenom;
     }
@@ -222,11 +187,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPrenom(?string $prenom): self
     {
         $this->prenom = $prenom;
-
         return $this;
     }
 
-    public function getDateNaissance():?\DateTimeInterface
+    public function getDateNaissance(): ?\DateTimeInterface
     {
         return $this->date_naissance;
     }
@@ -234,11 +198,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDateNaissance(?\DateTimeInterface $date_naissance): self
     {
         $this->date_naissance = $date_naissance;
-
         return $this;
     }
 
-    public function getAdresse():?string
+    public function getAdresse(): ?string
     {
         return $this->adresse;
     }
@@ -246,11 +209,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
-
         return $this;
     }
 
-    public function getTelephone():?string
+    public function getTelephone(): ?string
     {
         return $this->telephone;
     }
@@ -258,152 +220,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTelephone(?string $telephone): self
     {
         $this->telephone = $telephone;
-
         return $this;
     }
 
-    public function getPhoto()
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }
 
-    public function setPhoto($photo): self
+    public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
-
         return $this;
     }
 
-    public function getRole()
+    public function getRole(): string
     {
         return $this->role;
     }
 
-    public function setRole($role): self
+    public function setRole(string $role): self
     {
         $this->role = $role;
-
         return $this;
     }
-
-    /**
-     * @return Collection<int, Voiture>
-     */
-    public function getVoitures(): Collection
-    {
-        return $this->voitures;
-    }
-
-    public function addVoiture(Voiture $voiture): static
-    {
-        if (!$this->voitures->contains($voiture)) {
-            $this->voitures->add($voiture);
-            $voiture->setUtilisateur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVoiture(Voiture $voiture): static
-    {
-        if ($this->voitures->removeElement($voiture)) {
-            // set the owning side to null (unless already changed)
-            if ($voiture->getUtilisateur() === $this) {
-                $voiture->setUtilisateur(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Covoiturage>
-     */
-    public function getCovoituragesConducteur(): Collection
-    {
-        return $this->covoituragesConducteur;
-    }
-
-    public function addCovoituragesConducteur(Covoiturage $covoituragesConducteur): static
-    {
-        if (!$this->covoituragesConducteur->contains($covoituragesConducteur)) {
-            $this->covoituragesConducteur->add($covoituragesConducteur);
-            $covoituragesConducteur->setConducteur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCovoituragesConducteur(Covoiturage $covoituragesConducteur): static
-    {
-        if ($this->covoituragesConducteur->removeElement($covoituragesConducteur)) {
-            // set the owning side to null (unless already changed)
-            if ($covoituragesConducteur->getConducteur() === $this) {
-                $covoituragesConducteur->setConducteur(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Avis>
-     */
-    public function getAvisPassager(): Collection
-    {
-        return $this->avisPassager;
-    }
-
-    public function addAvisPassager(Avis $avisPassager): static
-    {
-        if (!$this->avisPassager->contains($avisPassager)) {
-            $this->avisPassager->add($avisPassager);
-            $avisPassager->setPassager($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAvisPassager(Avis $avisPassager): static
-    {
-        if ($this->avisPassager->removeElement($avisPassager)) {
-            // set the owning side to null (unless already changed)
-            if ($avisPassager->getPassager() === $this) {
-                $avisPassager->setPassager(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Avis>
-     */
-    public function getAvisConducteur(): Collection
-    {
-        return $this->avisConducteur;
-    }
-
-    public function addAvisConducteur(Avis $avisConducteur): static
-    {
-        if (!$this->avisConducteur->contains($avisConducteur)) {
-            $this->avisConducteur->add($avisConducteur);
-            $avisConducteur->setConducteur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAvisConducteur(Avis $avisConducteur): static
-    {
-        if ($this->avisConducteur->removeElement($avisConducteur)) {
-            // set the owning side to null (unless already changed)
-            if ($avisConducteur->getConducteur() === $this) {
-                $avisConducteur->setConducteur(null);
-            }
-        }
-
-        return $this;
-    }
-
 }

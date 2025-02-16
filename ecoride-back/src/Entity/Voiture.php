@@ -14,26 +14,21 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
 
 #[ORM\Entity(repositoryClass: VoitureRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(
-            normalizationContext: ['groups' => ['voiture:list']]
-        ),
-        new Get(
-            normalizationContext: ['groups' => ['voiture:item']]
-        ),
+        new GetCollection(normalizationContext: ['groups' => ['voiture:list']]),
+        new Get(normalizationContext: ['groups' => ['voiture:item']]),
         new Post(
             denormalizationContext: ['groups' => ['voiture:create']],
             normalizationContext: ['groups' => ['voiture:item']]
         ),
-        new Put(
-            denormalizationContext: ['groups' => ['voiture:update']]
-        ),
+        new Put(denormalizationContext: ['groups' => ['voiture:update']]),
         new Delete()
     ],
-    filters: [SearchFilter::class],
 )]
 #[ApiFilter(SearchFilter::class, properties: ['modele' => 'partial', 'marque' => 'partial'])]
 class Voiture
@@ -43,8 +38,9 @@ class Voiture
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255)] // Ajout du type ORM
     #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
-    protected $modele;
+    private ?string $modele = null; // Définition du type
 
     #[ORM\Column(length: 255)]
     private ?string $immatriculation = null;
@@ -68,15 +64,12 @@ class Voiture
     #[ORM\JoinColumn(nullable: false)]
     private ?User $utilisateur = null;
 
-    /**
-     * @var Collection<int, Covoiturage>
-     */
     #[ORM\OneToMany(targetEntity: Covoiturage::class, mappedBy: 'voiture')]
-    private Collection $covoituragesVoiture;
+    private Collection $covoiturages;
 
     public function __construct()
     {
-        $this->covoituragesVoiture = new ArrayCollection();
+        $this->covoiturages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,7 +85,6 @@ class Voiture
     public function setModele(string $modele): static
     {
         $this->modele = $modele;
-
         return $this;
     }
 
@@ -104,7 +96,6 @@ class Voiture
     public function setImmatriculation(string $immatriculation): static
     {
         $this->immatriculation = $immatriculation;
-
         return $this;
     }
 
@@ -116,7 +107,6 @@ class Voiture
     public function setEnergie(string $energie): static
     {
         $this->energie = $energie;
-
         return $this;
     }
 
@@ -128,7 +118,6 @@ class Voiture
     public function setCouleur(?string $couleur): static
     {
         $this->couleur = $couleur;
-
         return $this;
     }
 
@@ -140,7 +129,6 @@ class Voiture
     public function setMarque(?string $marque): static
     {
         $this->marque = $marque;
-
         return $this;
     }
 
@@ -152,7 +140,6 @@ class Voiture
     public function setPremiereImmatriculation(?\DateTimeInterface $premiere_immatriculation): static
     {
         $this->premiere_immatriculation = $premiere_immatriculation;
-
         return $this;
     }
 
@@ -164,7 +151,6 @@ class Voiture
     public function setNombrePlaces(?int $nombre_places): static
     {
         $this->nombre_places = $nombre_places;
-
         return $this;
     }
 
@@ -176,37 +162,33 @@ class Voiture
     public function setUtilisateur(?User $utilisateur): static
     {
         $this->utilisateur = $utilisateur;
-
         return $this;
     }
 
     /**
      * @return Collection<int, Covoiturage>
      */
-    public function getCovoituragesVoiture(): Collection
+    public function getCovoiturages(): Collection
     {
-        return $this->covoituragesVoiture;
+        return $this->covoiturages;
     }
 
-    public function addCovoituragesVoiture(Covoiturage $covoituragesVoiture): static
+    public function addCovoiturage(Covoiturage $covoiturage): static
     {
-        if (!$this->covoituragesVoiture->contains($covoituragesVoiture)) {
-            $this->covoituragesVoiture->add($covoituragesVoiture);
-            $covoituragesVoiture->setVoiture($this);
+        if (!$this->covoiturages->contains($covoiturage)) {
+            $this->covoiturages->add($covoiturage);
+            $covoiturage->setVoiture($this);
         }
-
         return $this;
     }
 
-    public function removeCovoituragesVoiture(Covoiturage $covoituragesVoiture): static
+    public function removeCovoiturage(Covoiturage $covoiturage): static
     {
-        if ($this->covoituragesVoiture->removeElement($covoituragesVoiture)) {
-            // set the owning side to null (unless already changed)
-            if ($covoituragesVoiture->getVoiture() === $this) {
-                $covoituragesVoiture->setVoiture(null);
+        if ($this->covoiturages->removeElement($covoiturage)) {
+            if ($covoiturage->getVoiture() === $this) {
+                $covoiturage->setVoiture(null);
             }
         }
-
         return $this;
     }
 }

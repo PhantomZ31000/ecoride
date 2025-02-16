@@ -1,0 +1,21 @@
+/* src/components/CovoituragesProblemes.css */.covoiturages-problemes {
+  /* Styles pour la section des covoiturages problématiques */
+}.covoiturages-problemes.covoiturage {
+    border: 1px solid #dee2e6; /* Bordure */
+    padding: 1rem; /* Espacement interne */
+    margin-bottom: 1rem; /* Marge inférieure */
+    border-radius: 0.25rem; /* Coins arrondis */
+  }.covoiturages-problemes.covoiturage h3 {
+    font-size: 1.2rem; /* Taille du titre */
+    margin-bottom: 0.5rem; /* Marge inférieure du titre */
+  }.covoiturages-problemes.covoiturage p {
+    font-size: 1rem; /* Taille du texte */
+    margin-bottom: 0.5rem; /* Marge inférieure du texte */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+  .covoiturages-problemes.covoiturage {
+      padding: 0.5rem; /* Espacement interne réduit sur les petits écrans */
+    }
+  }

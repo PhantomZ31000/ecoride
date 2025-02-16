@@ -1,0 +1,33 @@
+/* src/components/AvisValidation.css */.avis-validation {
+  /* Styles pour la section de validation des avis */
+}.avis-validation.avis {
+    border: 1px solid #dee2e6; /* Bordure */
+    padding: 1rem; /* Espacement interne */
+    margin-bottom: 1rem; /* Marge inférieure */
+    border-radius: 0.25rem; /* Coins arrondis */
+  }.avis-validation.avis.auteur {
+    font-weight: bold; /* Style du nom de l'auteur */
+  }.avis-validation.avis.date {
+    font-size: 0.9rem; /* Taille de la date */
+    color: #6c757d; /* Couleur de la date */
+  }.avis-validation.avis.note {
+    font-size: 1.2rem; /* Taille de la note */
+    color: #ffc107; /* Couleur de la note */
+  }.avis-validation.avis.commentaire {
+    margin-top: 0.5rem; /* Marge supérieure du commentaire */
+  }.avis-validation.avis.actions {
+    margin-top: 1rem; /* Marge supérieure des boutons d'action */
+  }.avis-validation.avis.actions button {
+    margin-right: 0.5rem; /* Marge droite entre les boutons */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+  .avis-validation.avis {
+      padding: 0.5rem; /* Espacement interne réduit sur les petits écrans */
+    }
+  
+  .avis-validation.avis.actions button {
+      margin-right: 0.25rem; /* Marge droite réduite entre les boutons sur les petits écrans */
+    }
+  }

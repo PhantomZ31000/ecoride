@@ -8,6 +8,7 @@ import Profil from './pages/Profil'; // Importez la page Profil
 import Connexion from './pages/Connexion'; // Importez la page Connexion
 import Inscription from './pages/Inscription'; // Importez la page Inscription
 import Covoiturage from './pages/Covoiturage'; // Importez la page Covoiturage
+import EspaceEmploye from './pages/EspaceEmploye';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription" element={<Inscription />} />
           <Route path="/covoiturage/:covoiturageId" element={<Covoiturage />} />
+          <Route path="/espace-employe" element={<EspaceEmploye />} />
           {/*... autres routes... */}
         </Routes>
       </div>

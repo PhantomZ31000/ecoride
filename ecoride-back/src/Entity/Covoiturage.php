@@ -14,6 +14,10 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
 
 #[ORM\Entity(repositoryClass: CovoiturageRepository::class)]
 #[ApiResource(
@@ -33,6 +37,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Put(
             denormalizationContext: ['groups' => ['covoiturage:update']]
         ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['covoiturage:list']],
+            security: "is_granted('ROLE_EMPLOYE')"
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['covoiturage:item']],
+            security: "is_granted('ROLE_EMPLOYE')"
+        ),
         new Delete()
     ],
     filters: [SearchFilter::class, RangeFilter::class],
@@ -43,13 +55,14 @@ class Covoiturage
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
+    #[ORM\Column(type: "string", length: 255)]
     #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
-    protected $lieu_depart;
+    private ?string $lieu_depart = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: "string", length: 255)]
     private ?string $lieu_arrivee = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -58,10 +71,10 @@ class Covoiturage
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $heure_depart = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "float")]
     private ?float $prix = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "integer")]
     private ?int $nombre_places_disponibles = null;
 
     #[ORM\ManyToOne(inversedBy: 'covoituragesConducteur')]
@@ -72,9 +85,6 @@ class Covoiturage
     #[ORM\JoinColumn(nullable: false)]
     private ?Voiture $voiture = null;
 
-    /**
-     * @var Collection<int, Avis>
-     */
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'covoiturage')]
     private Collection $avis;
 
@@ -96,7 +106,6 @@ class Covoiturage
     public function setLieuDepart(string $lieu_depart): static
     {
         $this->lieu_depart = $lieu_depart;
-
         return $this;
     }
 
@@ -108,7 +117,6 @@ class Covoiturage
     public function setLieuArrivee(string $lieu_arrivee): static
     {
         $this->lieu_arrivee = $lieu_arrivee;
-
         return $this;
     }
 
@@ -120,7 +128,6 @@ class Covoiturage
     public function setDateDepart(\DateTimeInterface $date_depart): static
     {
         $this->date_depart = $date_depart;
-
         return $this;
     }
 
@@ -132,7 +139,6 @@ class Covoiturage
     public function setHeureDepart(\DateTimeInterface $heure_depart): static
     {
         $this->heure_depart = $heure_depart;
-
         return $this;
     }
 
@@ -144,7 +150,6 @@ class Covoiturage
     public function setPrix(float $prix): static
     {
         $this->prix = $prix;
-
         return $this;
     }
 
@@ -156,7 +161,6 @@ class Covoiturage
     public function setNombrePlacesDisponibles(int $nombre_places_disponibles): static
     {
         $this->nombre_places_disponibles = $nombre_places_disponibles;
-
         return $this;
     }
 
@@ -168,7 +172,6 @@ class Covoiturage
     public function setConducteur(?User $conducteur): static
     {
         $this->conducteur = $conducteur;
-
         return $this;
     }
 
@@ -180,13 +183,9 @@ class Covoiturage
     public function setVoiture(?Voiture $voiture): static
     {
         $this->voiture = $voiture;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Avis>
-     */
     public function getAvis(): Collection
     {
         return $this->avis;
@@ -198,19 +197,16 @@ class Covoiturage
             $this->avis->add($avi);
             $avi->setCovoiturage($this);
         }
-
         return $this;
     }
 
     public function removeAvi(Avis $avi): static
     {
         if ($this->avis->removeElement($avi)) {
-            // set the owning side to null (unless already changed)
             if ($avi->getCovoiturage() === $this) {
                 $avi->setCovoiturage(null);
             }
         }
-
         return $this;
     }
 }
