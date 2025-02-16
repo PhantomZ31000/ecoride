@@ -32,6 +32,21 @@ use ApiPlatform\Metadata\ApiFilter;
             denormalizationContext: ['groups' => ['user:create']],
             normalizationContext: ['groups' => ['user:item']]
         ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['user:list']],
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['user:item']],
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Put(
+            denormalizationContext: ['groups' => ['user:update']],
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Delete(
+            security: "is_granted('ROLE_ADMIN')"
+        )
     ],
     filters: [SearchFilter::class],
 )]
@@ -126,14 +141,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
+        // guarantee every user at least has ROLE_USER
+        $roles = 'ROLE_USER';
 
+        // Add other roles based on user's role
         if ($this->getRole() === 'employe') {
-            $roles[] = 'ROLE_EMPLOYE';
+            $roles = 'ROLE_EMPLOYE';
+        }   elseif ($this->getRole() === 'conducteur') {
+            $roles = 'ROLE_CONDUCTEUR';
+        }   elseif ($this->getRole() === 'passager') {
+            $roles = 'ROLE_PASSAGER';
+        }   elseif ($this->getRole() === 'admin') {
+            $roles = 'ROLE_ADMIN';
         }
 
         return array_unique($roles);
     }
+
+
 
     public function setRoles(array $roles): self
     {

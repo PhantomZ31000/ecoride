@@ -9,6 +9,7 @@ import Connexion from './pages/Connexion'; // Importez la page Connexion
 import Inscription from './pages/Inscription'; // Importez la page Inscription
 import Covoiturage from './pages/Covoiturage'; // Importez la page Covoiturage
 import EspaceEmploye from './pages/EspaceEmploye';
+import EspaceAdministrateur from './pages/EspaceAdministrateur';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/inscription" element={<Inscription />} />
           <Route path="/covoiturage/:covoiturageId" element={<Covoiturage />} />
           <Route path="/espace-employe" element={<EspaceEmploye />} />
+          <Route path="/espace-administrateur" element={<EspaceAdministrateur />} />
           {/*... autres routes... */}
         </Routes>
       </div>

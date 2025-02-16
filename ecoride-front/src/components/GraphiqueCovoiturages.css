@@ -1,0 +1,5 @@
+/* src/components/GraphiqueCovoiturages.css */.graphique-covoiturages {
+  /* Styles pour le graphique des covoiturages */
+}.graphique-covoiturages.recharts-wrapper {
+    margin-bottom: 2rem; /* Marge inférieure du graphique */
+  }

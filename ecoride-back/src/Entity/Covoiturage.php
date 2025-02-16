@@ -24,6 +24,14 @@ use ApiPlatform\Core\Annotation\ApiFilter;
     operations: [
         new GetCollection(
             normalizationContext: ['groups' => ['covoiturage:list']],
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['covoiturage:item']],
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['covoiturage:list']],
             paginationItemsPerPage: 10,
             paginationMaximumItemsPerPage: 50,
         ),

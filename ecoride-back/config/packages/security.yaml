@@ -29,6 +29,7 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/espace-employe, roles: ROLE_EMPLOYE }
+        - { path: ^/espace-administrateur, roles: ROLE_ADMIN }
 
 when@test:
     security:
