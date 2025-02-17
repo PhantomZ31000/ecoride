@@ -16,7 +16,6 @@ use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
-use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Annotation\ApiFilter;
 
 #[ORM\Entity(repositoryClass: CovoiturageRepository::class)]
@@ -71,29 +70,37 @@ class Covoiturage
     private ?string $lieu_depart = null;
 
     #[ORM\Column(type: "string", length: 255)]
+    #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
     private ?string $lieu_arrivee = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
     private ?\DateTimeInterface $date_depart = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
     private ?\DateTimeInterface $heure_depart = null;
 
     #[ORM\Column(type: "float")]
+    #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
     private ?float $prix = null;
 
     #[ORM\Column(type: "integer")]
+    #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
     private ?int $nombre_places_disponibles = null;
 
     #[ORM\ManyToOne(inversedBy: 'covoituragesConducteur')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
     private ?User $conducteur = null;
 
     #[ORM\ManyToOne(inversedBy: 'covoituragesVoiture')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
     private ?Voiture $voiture = null;
 
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'covoiturage')]
+    #[Groups(['covoiturage:list', 'covoiturage:item'])]
     private Collection $avis;
 
     public function __construct()

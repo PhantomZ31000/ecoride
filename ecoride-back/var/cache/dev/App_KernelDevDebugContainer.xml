@@ -117,7 +117,6 @@
     </parameter>
     <parameter key="fragment.renderer.hinclude.global_template">null</parameter>
     <parameter key="fragment.path">/_fragment</parameter>
-    <parameter key="kernel.secret">%env(APP_SECRET)%</parameter>
     <parameter key="kernel.http_method_override">false</parameter>
     <parameter key="kernel.trust_x_sendfile_type_header">%env(bool:default::SYMFONY_TRUST_X_SENDFILE_TYPE_HEADER)%</parameter>
     <parameter key="kernel.trusted_hosts">%env(default::SYMFONY_TRUSTED_HOSTS)%</parameter>
@@ -143,15 +142,6 @@
     <parameter key="serializer.mapping.cache.file">C:\Users\Alex\Ecoride\ecoride-back\var\cache\dev/serialization.php</parameter>
     <parameter key=".serializer.named_serializers" type="collection"/>
     <parameter key="cache.prefix.seed">_C:\Users\Alex\Ecoride\ecoride-back.App_KernelDevDebugContainer</parameter>
-    <parameter key="session.metadata.storage_key">_sf2_meta</parameter>
-    <parameter key="session.storage.options" type="collection">
-      <parameter key="cache_limiter" type="string">0</parameter>
-      <parameter key="cookie_secure">auto</parameter>
-      <parameter key="cookie_httponly">true</parameter>
-      <parameter key="cookie_samesite">lax</parameter>
-    </parameter>
-    <parameter key="session.save_path">null</parameter>
-    <parameter key="session.metadata.update_threshold">0</parameter>
     <parameter key="form.type_extension.csrf.enabled">true</parameter>
     <parameter key="form.type_extension.csrf.field_name">_token</parameter>
     <parameter key="form.type_extension.csrf.field_attr" type="collection">
@@ -232,7 +222,7 @@
     <parameter key="doctrine.orm.second_level_cache.logger_statistics.class">Doctrine\ORM\Cache\Logging\StatisticsCacheLogger</parameter>
     <parameter key="doctrine.orm.second_level_cache.cache_configuration.class">Doctrine\ORM\Cache\CacheConfiguration</parameter>
     <parameter key="doctrine.orm.second_level_cache.regions_configuration.class">Doctrine\ORM\Cache\RegionsConfiguration</parameter>
-    <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
+    <parameter key="doctrine.orm.auto_generate_proxy_classes">false</parameter>
     <parameter key="doctrine.orm.enable_lazy_ghost_objects">true</parameter>
     <parameter key="doctrine.orm.proxy_dir">C:\Users\Alex\Ecoride\ecoride-back\var\cache\dev/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
@@ -295,11 +285,11 @@
       <parameter key="expose_headers" type="collection"/>
       <parameter key="allow_methods" type="collection">
         <parameter>GET</parameter>
-        <parameter>OPTIONS</parameter>
         <parameter>POST</parameter>
         <parameter>PUT</parameter>
         <parameter>PATCH</parameter>
         <parameter>DELETE</parameter>
+        <parameter>OPTIONS</parameter>
       </parameter>
       <parameter key="max_age">3600</parameter>
       <parameter key="hosts" type="collection"/>
@@ -710,7 +700,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.9tPpswS"/>
+      <argument type="service" id=".service_locator.pzAAJKB"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -843,7 +833,8 @@
         <argument key="debug.stopwatch" type="service" id="debug.stopwatch" on-invalid="ignore_uninitialized"/>
         <argument key="debug.event_dispatcher" type="service" id="debug.event_dispatcher" on-invalid="ignore_uninitialized"/>
         <argument key="debug.log_processor" type="service" id="debug.log_processor" on-invalid="ignore_uninitialized"/>
-        <argument key="session_listener" type="service" id="session_listener" on-invalid="ignore_uninitialized"/>
+        <argument key="doctrine.result_cache_pool" type="service" id="doctrine.result_cache_pool" on-invalid="ignore_uninitialized"/>
+        <argument key="doctrine.system_cache_pool" type="service" id="doctrine.system_cache_pool" on-invalid="ignore_uninitialized"/>
         <argument key="form.choice_list_factory.cached" type="service" id="form.choice_list_factory.cached" on-invalid="ignore_uninitialized"/>
         <argument key="cache.validator_expression_language" type="service" id="cache.validator_expression_language" on-invalid="ignore_uninitialized"/>
         <argument key="messenger.transport.in_memory.factory" type="service" id="messenger.transport.in_memory.factory" on-invalid="ignore_uninitialized"/>
@@ -854,7 +845,7 @@
         <argument key="form.type.entity" type="service" id="form.type.entity" on-invalid="ignore_uninitialized"/>
         <argument key="twig" type="service" id="twig" on-invalid="ignore_uninitialized"/>
         <argument key="twig.form.engine" type="service" id="twig.form.engine" on-invalid="ignore_uninitialized"/>
-        <argument key="security.token_storage" type="service" id="security.token_storage" on-invalid="ignore_uninitialized"/>
+        <argument key="security.untracked_token_storage" type="service" id="security.untracked_token_storage" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_expression_language" type="service" id="cache.security_expression_language" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_is_granted_attribute_expression_language" type="service" id="cache.security_is_granted_attribute_expression_language" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_is_csrf_token_valid_attribute_expression_language" type="service" id="cache.security_is_csrf_token_valid_attribute_expression_language" on-invalid="ignore_uninitialized"/>
@@ -919,7 +910,10 @@
         <argument key="debug.log_processor" type="collection">
           <argument>reset</argument>
         </argument>
-        <argument key="session_listener" type="collection">
+        <argument key="doctrine.result_cache_pool" type="collection">
+          <argument>reset</argument>
+        </argument>
+        <argument key="doctrine.system_cache_pool" type="collection">
           <argument>reset</argument>
         </argument>
         <argument key="form.choice_list_factory.cached" type="collection">
@@ -952,9 +946,8 @@
         <argument key="twig.form.engine" type="collection">
           <argument>reset</argument>
         </argument>
-        <argument key="security.token_storage" type="collection">
-          <argument>disableUsageTracking</argument>
-          <argument>setToken</argument>
+        <argument key="security.untracked_token_storage" type="collection">
+          <argument>reset</argument>
         </argument>
         <argument key="cache.security_expression_language" type="collection">
           <argument>reset</argument>
@@ -1158,9 +1151,9 @@
         <argument>cache.property_info</argument>
         <argument>cache.asset_mapper</argument>
         <argument>cache.messenger.restart_workers_signal</argument>
+        <argument>doctrine.result_cache_pool</argument>
+        <argument>doctrine.system_cache_pool</argument>
         <argument>cache.validator_expression_language</argument>
-        <argument>cache.doctrine.orm.default.result</argument>
-        <argument>cache.doctrine.orm.default.query</argument>
         <argument>cache.security_expression_language</argument>
         <argument>cache.security_is_granted_attribute_expression_language</argument>
         <argument>cache.security_is_csrf_token_valid_attribute_expression_language</argument>
@@ -1191,7 +1184,7 @@
     <service id="console.command.cache_pool_invalidate_tags" class="Symfony\Bundle\FrameworkBundle\Command\CachePoolInvalidateTagsCommand">
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.DOrA4Nm"/>
+      <argument type="service" id=".service_locator.PETJA0Q"/>
       <call method="setName">
         <argument>cache:pool:invalidate-tags</argument>
       </call>
@@ -1211,9 +1204,9 @@
         <argument>cache.property_info</argument>
         <argument>cache.asset_mapper</argument>
         <argument>cache.messenger.restart_workers_signal</argument>
+        <argument>doctrine.result_cache_pool</argument>
+        <argument>doctrine.system_cache_pool</argument>
         <argument>cache.validator_expression_language</argument>
-        <argument>cache.doctrine.orm.default.result</argument>
-        <argument>cache.doctrine.orm.default.query</argument>
         <argument>cache.security_expression_language</argument>
         <argument>cache.security_is_granted_attribute_expression_language</argument>
         <argument>cache.security_is_csrf_token_valid_attribute_expression_language</argument>
@@ -1241,9 +1234,9 @@
         <argument>cache.property_info</argument>
         <argument>cache.asset_mapper</argument>
         <argument>cache.messenger.restart_workers_signal</argument>
+        <argument>doctrine.result_cache_pool</argument>
+        <argument>doctrine.system_cache_pool</argument>
         <argument>cache.validator_expression_language</argument>
-        <argument>cache.doctrine.orm.default.result</argument>
-        <argument>cache.doctrine.orm.default.query</argument>
         <argument>cache.security_expression_language</argument>
         <argument>cache.security_is_granted_attribute_expression_language</argument>
         <argument>cache.security_is_csrf_token_valid_attribute_expression_language</argument>
@@ -1966,6 +1959,7 @@
       <argument type="collection">
         <argument key="cache.app" type="service" id="cache.app" on-invalid="ignore_uninitialized"/>
         <argument key="cache.messenger.restart_workers_signal" type="service" id="cache.messenger.restart_workers_signal" on-invalid="ignore_uninitialized"/>
+        <argument key="doctrine.result_cache_pool" type="service" id="doctrine.result_cache_pool" on-invalid="ignore_uninitialized"/>
       </argument>
     </service>
     <service id="cache.system_clearer" class="Symfony\Component\HttpKernel\CacheClearer\Psr6CacheClearer" public="true">
@@ -1976,6 +1970,7 @@
         <argument key="cache.serializer" type="service" id="cache.serializer" on-invalid="ignore_uninitialized"/>
         <argument key="cache.property_info" type="service" id="cache.property_info" on-invalid="ignore_uninitialized"/>
         <argument key="cache.asset_mapper" type="service" id="cache.asset_mapper" on-invalid="ignore_uninitialized"/>
+        <argument key="doctrine.system_cache_pool" type="service" id="doctrine.system_cache_pool" on-invalid="ignore_uninitialized"/>
         <argument key="cache.validator_expression_language" type="service" id="cache.validator_expression_language" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_expression_language" type="service" id="cache.security_expression_language" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_is_granted_attribute_expression_language" type="service" id="cache.security_is_granted_attribute_expression_language" on-invalid="ignore_uninitialized"/>
@@ -1997,9 +1992,9 @@
         <argument key="cache.property_info" type="service" id="cache.property_info" on-invalid="ignore_uninitialized"/>
         <argument key="cache.asset_mapper" type="service" id="cache.asset_mapper" on-invalid="ignore_uninitialized"/>
         <argument key="cache.messenger.restart_workers_signal" type="service" id="cache.messenger.restart_workers_signal" on-invalid="ignore_uninitialized"/>
+        <argument key="doctrine.result_cache_pool" type="service" id="doctrine.result_cache_pool" on-invalid="ignore_uninitialized"/>
+        <argument key="doctrine.system_cache_pool" type="service" id="doctrine.system_cache_pool" on-invalid="ignore_uninitialized"/>
         <argument key="cache.validator_expression_language" type="service" id="cache.validator_expression_language" on-invalid="ignore_uninitialized"/>
-        <argument key="cache.doctrine.orm.default.result" type="service" id="cache.doctrine.orm.default.result" on-invalid="ignore_uninitialized"/>
-        <argument key="cache.doctrine.orm.default.query" type="service" id="cache.doctrine.orm.default.query" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_expression_language" type="service" id="cache.security_expression_language" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_is_granted_attribute_expression_language" type="service" id="cache.security_is_granted_attribute_expression_language" on-invalid="ignore_uninitialized"/>
         <argument key="cache.security_is_csrf_token_valid_attribute_expression_language" type="service" id="cache.security_is_csrf_token_valid_attribute_expression_language" on-invalid="ignore_uninitialized"/>
@@ -3417,22 +3412,6 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
-        <argument>kernel.request</argument>
-        <argument type="collection">
-          <argument type="service_closure" id="session_listener"/>
-          <argument>onKernelRequest</argument>
-        </argument>
-        <argument>128</argument>
-      </call>
-      <call method="addListener">
-        <argument>kernel.response</argument>
-        <argument type="collection">
-          <argument type="service_closure" id="session_listener"/>
-          <argument>onKernelResponse</argument>
-        </argument>
-        <argument>-1000</argument>
-      </call>
-      <call method="addListener">
         <argument>Symfony\Component\Messenger\Event\WorkerMessageFailedEvent</argument>
         <argument type="collection">
           <argument type="service_closure" id="messenger.retry.send_failed_message_for_retry_listener"/>
@@ -3750,7 +3729,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.9tPpswS"/>
+      <argument type="service" id=".service_locator.pzAAJKB"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -3934,7 +3913,7 @@
     <service id="secrets.vault" class="Symfony\Bundle\FrameworkBundle\Secrets\SodiumVault">
       <argument>C:\Users\Alex\Ecoride\ecoride-back/config/secrets/%env(default:kernel.environment:APP_RUNTIME_ENV)%</argument>
       <argument type="service" id="secrets.decryption_key" on-invalid="ignore"/>
-      <argument>APP_SECRET</argument>
+      <argument>null</argument>
     </service>
     <service id="secrets.env_var_loader" class="Symfony\Component\DependencyInjection\StaticEnvVarLoader">
       <tag name="container.env_var_loader"/>
@@ -4253,76 +4232,28 @@
         <argument key="lazy">true</argument>
       </argument>
     </service>
+    <service id=".doctrine.result_cache_pool.taggable" class="Symfony\Component\Cache\Adapter\TagAwareAdapter">
+      <tag name="cache.taggable" pool="doctrine.result_cache_pool"/>
+      <argument type="service" id="doctrine.result_cache_pool"/>
+    </service>
+    <service id="doctrine.result_cache_pool" class="Symfony\Component\Cache\Adapter\TraceableAdapter">
+      <tag name="cache.pool"/>
+      <tag name="kernel.reset" method="reset"/>
+      <argument type="service" id="doctrine.result_cache_pool.recorder_inner"/>
+    </service>
+    <service id=".doctrine.system_cache_pool.taggable" class="Symfony\Component\Cache\Adapter\TagAwareAdapter">
+      <tag name="cache.taggable" pool="doctrine.system_cache_pool"/>
+      <argument type="service" id="doctrine.system_cache_pool"/>
+    </service>
+    <service id="doctrine.system_cache_pool" class="Symfony\Component\Cache\Adapter\TraceableAdapter">
+      <tag name="cache.pool"/>
+      <tag name="kernel.reset" method="reset"/>
+      <argument type="service" id="doctrine.system_cache_pool.recorder_inner"/>
+    </service>
     <service id="cache.property_access" class="Symfony\Component\Cache\Adapter\ArrayAdapter">
       <argument>0</argument>
       <argument>false</argument>
     </service>
-    <service id="session.factory" class="Symfony\Component\HttpFoundation\Session\SessionFactory">
-      <argument type="service" id="request_stack"/>
-      <argument type="service" id="session.storage.factory.native"/>
-      <argument type="collection">
-        <argument type="service" id="session_listener"/>
-        <argument>onSessionUsage</argument>
-      </argument>
-    </service>
-    <service id="session.storage.factory.native" class="Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorageFactory">
-      <argument>%session.storage.options%</argument>
-      <argument type="service" id="session.handler.native"/>
-      <argument type="service">
-        <service class="Symfony\Component\HttpFoundation\Session\Storage\MetadataBag">
-          <argument>_sf2_meta</argument>
-          <argument>0</argument>
-        </service>
-      </argument>
-      <argument>true</argument>
-    </service>
-    <service id="session.storage.factory.php_bridge" class="Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorageFactory">
-      <argument type="service" id="session.handler.native"/>
-      <argument type="service">
-        <service class="Symfony\Component\HttpFoundation\Session\Storage\MetadataBag">
-          <argument>_sf2_meta</argument>
-          <argument>0</argument>
-        </service>
-      </argument>
-      <argument>true</argument>
-    </service>
-    <service id="session.storage.factory.mock_file" class="Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory">
-      <argument>C:\Users\Alex\Ecoride\ecoride-back\var\cache\dev/sessions</argument>
-      <argument>MOCKSESSID</argument>
-      <argument type="service">
-        <service class="Symfony\Component\HttpFoundation\Session\Storage\MetadataBag">
-          <argument>_sf2_meta</argument>
-          <argument>0</argument>
-        </service>
-      </argument>
-    </service>
-    <service id="session.handler.native" class="Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler">
-      <argument type="service">
-        <service class="SessionHandler"/>
-      </argument>
-    </service>
-    <service id="session.handler.native_file" class="Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler">
-      <argument type="service">
-        <service class="Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler">
-          <argument>null</argument>
-        </service>
-      </argument>
-    </service>
-    <service id="session.abstract_handler" class="Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler">
-      <argument type="abstract">A string or a connection object</argument>
-      <argument type="collection"/>
-      <factory class="Symfony\Component\HttpFoundation\Session\Storage\Handler\SessionHandlerFactory" method="createHandler"/>
-    </service>
-    <service id="session_listener" class="Symfony\Component\HttpKernel\EventListener\SessionListener">
-      <tag name="kernel.reset" method="reset"/>
-      <tag name="kernel.event_subscriber"/>
-      <tag name="container.hot_path"/>
-      <tag name="container.hot_path"/>
-      <argument type="service" id=".service_locator.ECaP3MA"/>
-      <argument>true</argument>
-      <argument>%session.storage.options%</argument>
-    </service>
-    <service id="session.marshaller" class="Symfony\Component\HttpFoundation\Session\Storage\Handler\IdentityMarshaller"/>
     <service id="security.csrf.token_generator" class="Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator"/>
     <service id="security.csrf.token_storage" class="Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage">
       <argument type="service" id="request_stack"/>
@@ -4337,11 +4268,10 @@
     <service id="security.csrf.same_origin_token_manager" class="Symfony\Component\Security\Csrf\SameOriginCsrfTokenManager">
       <tag name="monolog.logger" channel="request"/>
       <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
-      <tag name="container.decorator" id="security.csrf.token_manager" inner="security.csrf.same_origin_token_manager.inner"/>
       <tag name="container.hot_path"/>
       <argument type="service" id="request_stack"/>
       <argument type="service" id="monolog.logger.request" on-invalid="null"/>
-      <argument type="service" id="security.csrf.same_origin_token_manager.inner"/>
+      <argument>null</argument>
       <argument type="collection">
         <argument>submit</argument>
         <argument>authenticate</argument>
@@ -5309,16 +5239,16 @@
         <argument type="service" id="cache.messenger.restart_workers_signal"/>
       </call>
       <call method="addInstance">
+        <argument>doctrine.result_cache_pool</argument>
+        <argument type="service" id="doctrine.result_cache_pool"/>
+      </call>
+      <call method="addInstance">
+        <argument>doctrine.system_cache_pool</argument>
+        <argument type="service" id="doctrine.system_cache_pool"/>
+      </call>
+      <call method="addInstance">
         <argument>cache.validator_expression_language</argument>
         <argument type="service" id="cache.validator_expression_language"/>
-      </call>
-      <call method="addInstance">
-        <argument>cache.doctrine.orm.default.result</argument>
-        <argument type="service" id="cache.doctrine.orm.default.result"/>
-      </call>
-      <call method="addInstance">
-        <argument>cache.doctrine.orm.default.query</argument>
-        <argument type="service" id="cache.doctrine.orm.default.query"/>
       </call>
       <call method="addInstance">
         <argument>cache.security_expression_language</argument>
@@ -5529,7 +5459,7 @@
       </call>
     </service>
     <service id="doctrine.dbal.default_connection.event_manager" class="Symfony\Bridge\Doctrine\ContainerAwareEventManager">
-      <argument type="service" id=".service_locator.wy_sXIY"/>
+      <argument type="service" id=".service_locator.IjHQXQk"/>
       <argument type="collection">
         <argument type="collection">
           <argument type="collection">
@@ -5559,12 +5489,6 @@
           <argument type="collection">
             <argument>postGenerateSchema</argument>
           </argument>
-          <argument>doctrine.orm.listeners.pdo_session_handler_schema_listener</argument>
-        </argument>
-        <argument type="collection">
-          <argument type="collection">
-            <argument>postGenerateSchema</argument>
-          </argument>
           <argument>doctrine.orm.listeners.lock_store_schema_listener</argument>
         </argument>
         <argument type="collection">
@@ -5589,15 +5513,18 @@
     </service>
     <service id="doctrine.dbal.default_connection" class="Doctrine\DBAL\Connection" public="true">
       <argument type="collection">
-        <argument key="url">%env(resolve:DATABASE_URL)%</argument>
-        <argument key="use_savepoints">true</argument>
         <argument key="driver">pdo_mysql</argument>
+        <argument key="url">%env(resolve:DATABASE_URL)%</argument>
+        <argument key="charset">utf8mb4</argument>
+        <argument key="use_savepoints">true</argument>
+        <argument key="dbname_suffix">_test%env(default::TEST_TOKEN)%</argument>
         <argument key="idle_connection_ttl">600</argument>
         <argument key="host">localhost</argument>
         <argument key="port">null</argument>
         <argument key="user">root</argument>
         <argument key="password">null</argument>
         <argument key="driverOptions" type="collection"/>
+        <argument key="serverVersion">10.4.32-MariaDB</argument>
         <argument key="defaultTableOptions" type="collection"/>
       </argument>
       <argument type="service" id="doctrine.dbal.default_connection.configuration"/>
@@ -5716,10 +5643,6 @@
       <tag name="doctrine.event_listener" event="postGenerateSchema"/>
       <argument type="tagged_iterator" tag="security.remember_me_handler"/>
     </service>
-    <service id="doctrine.orm.listeners.pdo_session_handler_schema_listener" class="Symfony\Bridge\Doctrine\SchemaListener\PdoSessionHandlerSchemaListener">
-      <tag name="doctrine.event_listener" event="postGenerateSchema"/>
-      <argument type="service" id="session.handler.native"/>
-    </service>
     <service id="doctrine.orm.listeners.lock_store_schema_listener" class="Symfony\Bridge\Doctrine\SchemaListener\LockStoreSchemaListener">
       <tag name="doctrine.event_listener" event="postGenerateSchema"/>
       <argument type="tagged_iterator" tag="lock.store"/>
@@ -5748,19 +5671,6 @@
       <tag name="Symfony\Bridge\Doctrine\ArgumentResolver\EntityValueResolver" priority="110">controller.argument_value_resolver</tag>
       <argument type="service" id="doctrine"/>
       <argument type="service" id="doctrine.orm.entity_value_resolver.expression_language" on-invalid="ignore"/>
-      <argument type="service">
-        <service class="Symfony\Bridge\Doctrine\Attribute\MapEntity">
-          <argument>null</argument>
-          <argument>null</argument>
-          <argument>null</argument>
-          <argument type="collection"/>
-          <argument>null</argument>
-          <argument>null</argument>
-          <argument>null</argument>
-          <argument>null</argument>
-          <argument>false</argument>
-        </service>
-      </argument>
     </service>
     <service id="doctrine.orm.entity_value_resolver.expression_language" class="Symfony\Component\ExpressionLanguage\ExpressionLanguage"/>
     <service id="doctrine.cache_clear_metadata_command" class="Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand">
@@ -5870,10 +5780,10 @@
         <argument type="service" id="cache.doctrine.orm.default.metadata"/>
       </call>
       <call method="setQueryCache">
-        <argument type="service" id="cache.doctrine.orm.default.query"/>
+        <argument type="service" id="doctrine.system_cache_pool"/>
       </call>
       <call method="setResultCache">
-        <argument type="service" id="cache.doctrine.orm.default.result"/>
+        <argument type="service" id="doctrine.result_cache_pool"/>
       </call>
       <call method="setMetadataDriverImpl">
         <argument type="service" id=".doctrine.orm.default_metadata_driver"/>
@@ -5885,7 +5795,7 @@
         <argument>Proxies</argument>
       </call>
       <call method="setAutoGenerateProxyClasses">
-        <argument>true</argument>
+        <argument>false</argument>
       </call>
       <call method="setSchemaIgnoreClasses">
         <argument type="collection"/>
@@ -5927,14 +5837,6 @@
       <argument>true</argument>
     </service>
     <service id="cache.doctrine.orm.default.metadata" class="Symfony\Component\Cache\Adapter\ArrayAdapter"/>
-    <service id="cache.doctrine.orm.default.result" class="Symfony\Component\Cache\Adapter\TraceableAdapter">
-      <tag name="cache.pool"/>
-      <argument type="service" id="cache.doctrine.orm.default.result.recorder_inner"/>
-    </service>
-    <service id="cache.doctrine.orm.default.query" class="Symfony\Component\Cache\Adapter\TraceableAdapter">
-      <tag name="cache.pool"/>
-      <argument type="service" id="cache.doctrine.orm.default.query.recorder_inner"/>
-    </service>
     <service id="doctrine.orm.default_entity_listener_resolver" class="Doctrine\Bundle\DoctrineBundle\Mapping\ContainerEntityListenerResolver">
       <argument type="service" id="service_container"/>
     </service>
@@ -6406,7 +6308,7 @@
         <argument>true</argument>
       </call>
       <call method="setTokenStorage">
-        <argument type="service" id="security.token_storage" on-invalid="ignore"/>
+        <argument type="service" id="security.untracked_token_storage" on-invalid="ignore"/>
       </call>
       <call method="setRequestStack">
         <argument type="service" id="request_stack" on-invalid="ignore"/>
@@ -6796,16 +6698,12 @@
     </service>
     <service id="twig.missing_extension_suggestor" class="Twig\Extra\TwigExtraBundle\MissingExtensionSuggestor"/>
     <service id="security.authorization_checker" class="Symfony\Component\Security\Core\Authorization\AuthorizationChecker">
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="debug.security.access.decision_manager"/>
     </service>
-    <service id="security.token_storage" class="Symfony\Component\Security\Core\Authentication\Token\Storage\UsageTrackingTokenStorage">
-      <tag name="kernel.reset" method="disableUsageTracking"/>
-      <tag name="kernel.reset" method="setToken"/>
-      <argument type="service" id="security.untracked_token_storage"/>
-      <argument type="service" id=".service_locator.mDV6p8L"/>
+    <service id="security.untracked_token_storage" class="Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage">
+      <tag name="kernel.reset" method="reset"/>
     </service>
-    <service id="security.untracked_token_storage" class="Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage"/>
     <service id="security.helper" class="Symfony\Bundle\SecurityBundle\Security">
       <argument type="service" id=".service_locator.NXTTdTW"/>
       <argument type="collection">
@@ -6815,11 +6713,11 @@
     </service>
     <service id="security.user_value_resolver" class="Symfony\Component\Security\Http\Controller\UserValueResolver">
       <tag priority="120" name="Symfony\Component\Security\Http\Controller\UserValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
     </service>
     <service id="security.security_token_value_resolver" class="Symfony\Component\Security\Http\Controller\SecurityTokenValueResolver">
       <tag priority="120" name="Symfony\Component\Security\Http\Controller\SecurityTokenValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
     </service>
     <service id="security.authentication.trust_resolver" class="Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver"/>
     <service id="security.authentication.session_strategy" class="Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy">
@@ -6864,7 +6762,7 @@
     <service id="security.impersonate_url_generator" class="Symfony\Component\Security\Http\Impersonate\ImpersonateUrlGenerator">
       <argument type="service" id="request_stack"/>
       <argument type="service" id="security.firewall.map"/>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
     </service>
     <service id="security.firewall.map" class="Symfony\Bundle\SecurityBundle\Security\FirewallMap">
       <argument type="service" id=".service_locator.bsoXAxw"/>
@@ -6904,7 +6802,7 @@
     <service id="security.logout_url_generator" class="Symfony\Component\Security\Http\Logout\LogoutUrlGenerator">
       <argument type="service" id="request_stack" on-invalid="null"/>
       <argument type="service" id="router.default" on-invalid="null"/>
-      <argument type="service" id="security.token_storage" on-invalid="null"/>
+      <argument type="service" id="security.untracked_token_storage" on-invalid="null"/>
     </service>
     <service id="security.route_loader.logout" class="Symfony\Bundle\SecurityBundle\Routing\LogoutRouteLoader">
       <tag name="routing.route_loader"/>
@@ -6930,12 +6828,10 @@
     <service id="security.http_utils" class="Symfony\Component\Security\Http\HttpUtils">
       <argument type="service" id="router.default" on-invalid="null"/>
       <argument type="service" id="router.default" on-invalid="null"/>
-      <argument>{^https?://%%s$}i</argument>
-      <argument>{^https://%%s$}i</argument>
     </service>
     <service id="security.validator.user_password" class="Symfony\Component\Security\Core\Validator\Constraints\UserPasswordValidator">
       <tag name="validator.constraint_validator" alias="security.validator.user_password"/>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="security.password_hasher_factory"/>
     </service>
     <service id="cache.security_expression_language" class="Symfony\Component\Cache\Adapter\TraceableAdapter">
@@ -7037,13 +6933,9 @@
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument type="service" id="debug.event_dispatcher" on-invalid="null"/>
       <argument type="service" id="security.authentication.trust_resolver"/>
-      <argument type="collection">
-        <argument type="service" id="security.token_storage"/>
-        <argument>enableUsageTracking</argument>
-      </argument>
     </service>
     <service id="security.logout_listener" class="Symfony\Component\Security\Http\Firewall\LogoutListener" abstract="true">
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="security.http_utils"/>
       <argument type="abstract">event dispatcher</argument>
       <argument type="collection"/>
@@ -7057,7 +6949,7 @@
     </service>
     <service id="security.authentication.listener.abstract" abstract="true">
       <tag name="monolog.logger" channel="security"/>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="security.authentication.manager"/>
       <argument type="service" id="security.authentication.session_strategy"/>
       <argument type="service" id="security.http_utils"/>
@@ -7091,7 +6983,7 @@
     </service>
     <service id="security.exception_listener" class="Symfony\Component\Security\Http\Firewall\ExceptionListener" abstract="true">
       <tag name="monolog.logger" channel="security"/>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="security.authentication.trust_resolver"/>
       <argument type="service" id="security.http_utils"/>
       <argument type="abstract">Provider-shared Key</argument>
@@ -7103,7 +6995,7 @@
     </service>
     <service id="security.authentication.switchuser_listener" class="Symfony\Component\Security\Http\Firewall\SwitchUserListener" abstract="true">
       <tag name="monolog.logger" channel="security"/>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="abstract">User Provider</argument>
       <argument type="abstract">User Checker</argument>
       <argument type="abstract">Provider Key</argument>
@@ -7118,7 +7010,7 @@
     </service>
     <service id="security.access_listener" class="Symfony\Component\Security\Http\Firewall\AccessListener">
       <tag name="monolog.logger" channel="security"/>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="debug.security.access.decision_manager"/>
       <argument type="service" id="security.access_map"/>
     </service>
@@ -7130,7 +7022,7 @@
     <service id="security.authenticator.manager" class="Symfony\Component\Security\Http\Authentication\AuthenticatorManager" abstract="true">
       <tag name="monolog.logger" channel="security"/>
       <argument type="abstract">authenticators</argument>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="debug.event_dispatcher"/>
       <argument type="abstract">provider key</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
@@ -7203,7 +7095,7 @@
     <service id="security.authenticator.x509" class="Symfony\Component\Security\Http\Authenticator\X509Authenticator" abstract="true">
       <tag name="monolog.logger" channel="security"/>
       <argument type="abstract">user provider</argument>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="abstract">firewall name</argument>
       <argument type="abstract">user key</argument>
       <argument type="abstract">credentials key</argument>
@@ -7213,7 +7105,7 @@
     <service id="security.authenticator.remote_user" class="Symfony\Component\Security\Http\Authenticator\RemoteUserAuthenticator" abstract="true">
       <tag name="monolog.logger" channel="security"/>
       <argument type="abstract">user provider</argument>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="abstract">firewall name</argument>
       <argument type="abstract">user key</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
@@ -7412,10 +7304,6 @@
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument type="service" id="debug.security.event_dispatcher.main"/>
       <argument type="service" id="security.authentication.trust_resolver"/>
-      <argument type="collection">
-        <argument type="service" id="security.token_storage"/>
-        <argument>enableUsageTracking</argument>
-      </argument>
     </service>
     <service id="security.listener.session.main" class="Symfony\Component\Security\Http\EventListener\SessionStrategyListener">
       <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
@@ -7424,7 +7312,7 @@
     <service id="security.authenticator.manager.main" class="Symfony\Component\Security\Http\Authentication\AuthenticatorManager">
       <tag name="monolog.logger" channel="security"/>
       <argument type="collection"/>
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="debug.security.event_dispatcher.main"/>
       <argument>main</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
@@ -7442,7 +7330,7 @@
       <argument type="service" id="security.user_checker"/>
     </service>
     <service id="security.exception_listener.main" class="Symfony\Component\Security\Http\Firewall\ExceptionListener">
-      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="security.authentication.trust_resolver"/>
       <argument type="service" id="security.http_utils"/>
       <argument>main</argument>
@@ -8760,7 +8648,7 @@
       <argument type="service" id="security.expression_language" on-invalid="null"/>
       <argument type="service" id="security.authentication.trust_resolver" on-invalid="null"/>
       <argument type="service" id="security.role_hierarchy" on-invalid="null"/>
-      <argument type="service" id="security.token_storage" on-invalid="null"/>
+      <argument type="service" id="security.untracked_token_storage" on-invalid="null"/>
       <argument type="service" id="security.authorization_checker" on-invalid="null"/>
       <argument>false</argument>
     </service>
@@ -9468,17 +9356,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.3QECKYg" method="withContext"/>
     </service>
-    <service id=".service_locator.MEs4xNG" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.gcAlB65" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="covoiturageRepository" type="service_closure" id="App\Repository\CovoiturageRepository"/>
+        <argument key="serializer" type="service_closure" id="debug.serializer"/>
       </argument>
     </service>
-    <service id=".service_locator.MEs4xNG.App\Controller\CovoiturageController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.gcAlB65.App\Controller\CovoiturageController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\CovoiturageController::index()"/>
       <argument>App\Controller\CovoiturageController::index()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.MEs4xNG" method="withContext"/>
+      <factory service=".service_locator.gcAlB65" method="withContext"/>
     </service>
     <service id=".service_locator.i.fVVTo" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -9498,13 +9387,19 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.i.fVVTo" method="withContext"/>
     </service>
+    <service id=".service_locator.MEs4xNG" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="covoiturageRepository" type="service_closure" id="App\Repository\CovoiturageRepository"/>
+      </argument>
+    </service>
     <service id=".service_locator.MEs4xNG.App\Controller\RechercheController::recherche()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RechercheController::recherche()"/>
       <argument>App\Controller\RechercheController::recherche()</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.MEs4xNG" method="withContext"/>
     </service>
-    <service id=".service_locator.9tPpswS" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.pzAAJKB" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.zHyJIs5.kernel::registerContainerConfiguration()"/>
@@ -9513,7 +9408,7 @@
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.zHyJIs5.kernel::loadRoutes()"/>
         <argument key="App\Controller\AdminController::index" type="service_closure" id=".service_locator.OzEre6h.App\Controller\AdminController::index()"/>
         <argument key="App\Controller\AuthentificationController::login" type="service_closure" id=".service_locator.3QECKYg.App\Controller\AuthentificationController::login()"/>
-        <argument key="App\Controller\CovoiturageController::index" type="service_closure" id=".service_locator.MEs4xNG.App\Controller\CovoiturageController::index()"/>
+        <argument key="App\Controller\CovoiturageController::index" type="service_closure" id=".service_locator.gcAlB65.App\Controller\CovoiturageController::index()"/>
         <argument key="App\Controller\EmployeController::validerAvis" type="service_closure" id=".service_locator.i.fVVTo.App\Controller\EmployeController::validerAvis()"/>
         <argument key="App\Controller\EmployeController::refuserAvis" type="service_closure" id=".service_locator.i.fVVTo.App\Controller\EmployeController::refuserAvis()"/>
         <argument key="App\Controller\RechercheController::recherche" type="service_closure" id=".service_locator.MEs4xNG.App\Controller\RechercheController::recherche()"/>
@@ -9521,7 +9416,7 @@
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.zHyJIs5.kernel::loadRoutes()"/>
         <argument key="App\Controller\AdminController:index" type="service_closure" id=".service_locator.OzEre6h.App\Controller\AdminController::index()"/>
         <argument key="App\Controller\AuthentificationController:login" type="service_closure" id=".service_locator.3QECKYg.App\Controller\AuthentificationController::login()"/>
-        <argument key="App\Controller\CovoiturageController:index" type="service_closure" id=".service_locator.MEs4xNG.App\Controller\CovoiturageController::index()"/>
+        <argument key="App\Controller\CovoiturageController:index" type="service_closure" id=".service_locator.gcAlB65.App\Controller\CovoiturageController::index()"/>
         <argument key="App\Controller\EmployeController:validerAvis" type="service_closure" id=".service_locator.i.fVVTo.App\Controller\EmployeController::validerAvis()"/>
         <argument key="App\Controller\EmployeController:refuserAvis" type="service_closure" id=".service_locator.i.fVVTo.App\Controller\EmployeController::refuserAvis()"/>
         <argument key="App\Controller\RechercheController:recherche" type="service_closure" id=".service_locator.MEs4xNG.App\Controller\RechercheController::recherche()"/>
@@ -9925,13 +9820,12 @@
       <argument type="service" id="http_client.uri_template"/>
       <argument type="service" id="debug.stopwatch" on-invalid="ignore"/>
     </service>
-    <service id=".service_locator.wy_sXIY" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.IjHQXQk" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="doctrine.orm.messenger.doctrine_schema_listener" type="service_closure" id="doctrine.orm.messenger.doctrine_schema_listener"/>
         <argument key="doctrine.orm.listeners.doctrine_dbal_cache_adapter_schema_listener" type="service_closure" id="doctrine.orm.listeners.doctrine_dbal_cache_adapter_schema_listener"/>
         <argument key="doctrine.orm.listeners.doctrine_token_provider_schema_listener" type="service_closure" id="doctrine.orm.listeners.doctrine_token_provider_schema_listener"/>
-        <argument key="doctrine.orm.listeners.pdo_session_handler_schema_listener" type="service_closure" id="doctrine.orm.listeners.pdo_session_handler_schema_listener"/>
         <argument key="doctrine.orm.listeners.lock_store_schema_listener" type="service_closure" id="doctrine.orm.listeners.lock_store_schema_listener"/>
         <argument key="doctrine.orm.default_listeners.attach_entity_listeners" type="service_closure" id="doctrine.orm.default_listeners.attach_entity_listeners"/>
         <argument key="turbo.doctrine.event_listener" type="service_closure" id="turbo.doctrine.event_listener"/>
@@ -10194,7 +10088,7 @@
         <argument key="security.authorization_checker" type="service_closure" id="security.authorization_checker" on-invalid="ignore"/>
         <argument key="twig" type="service_closure" id="twig" on-invalid="ignore"/>
         <argument key="form.factory" type="service_closure" id="form.factory" on-invalid="ignore"/>
-        <argument key="security.token_storage" type="service_closure" id="security.token_storage" on-invalid="ignore"/>
+        <argument key="security.token_storage" type="service_closure" id="security.untracked_token_storage" on-invalid="ignore"/>
         <argument key="security.csrf.token_manager" type="service_closure" id="security.csrf.same_origin_token_manager" on-invalid="ignore"/>
         <argument key="parameter_bag" type="service_closure" id="parameter_bag" on-invalid="ignore"/>
         <argument key="web_link.http_header_serializer" type="service_closure" id="web_link.http_header_serializer" on-invalid="ignore"/>
@@ -10345,10 +10239,12 @@
       <tag name="container.service_locator"/>
       <argument type="collection"/>
     </service>
-    <service id=".service_locator.DOrA4Nm" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.PETJA0Q" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="cache.app" type="service_closure" id="cache.app.taggable"/>
+        <argument key="doctrine.result_cache_pool" type="service_closure" id=".doctrine.result_cache_pool.taggable"/>
+        <argument key="doctrine.system_cache_pool" type="service_closure" id=".doctrine.system_cache_pool.taggable"/>
       </argument>
     </service>
     <service id=".service_locator.xRvtKlk" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -10382,15 +10278,6 @@
         <argument key="ReflectionType" type="service_closure" id="type_info.resolver.reflection_type"/>
       </argument>
     </service>
-    <service id=".service_locator.ECaP3MA" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="session_factory" type="service_closure" id="session.factory" on-invalid="ignore"/>
-        <argument key="logger" type="service_closure" id="monolog.logger" on-invalid="ignore"/>
-        <argument key="session_collector" type="service_closure" id="data_collector.request.session_collector" on-invalid="ignore"/>
-        <argument key="request_stack" type="service_closure" id="request_stack" on-invalid="ignore"/>
-      </argument>
-    </service>
     <service id=".service_locator.7KXt.i1" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10402,16 +10289,10 @@
         <argument key="desktop" type="service_closure" id="notifier.channel.desktop"/>
       </argument>
     </service>
-    <service id=".service_locator.mDV6p8L" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="request_stack" type="service_closure" id="request_stack"/>
-      </argument>
-    </service>
     <service id=".service_locator.NXTTdTW" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="security.token_storage" type="service_closure" id="security.token_storage"/>
+        <argument key="security.token_storage" type="service_closure" id="security.untracked_token_storage"/>
         <argument key="security.authorization_checker" type="service_closure" id="security.authorization_checker"/>
         <argument key="security.authenticator.managers_locator" type="service_closure" id="security.authenticator.managers_locator" on-invalid="ignore"/>
         <argument key="request_stack" type="service_closure" id="request_stack"/>
@@ -10539,11 +10420,6 @@
         <argument type="service" id=".debug.value_resolver.argument_resolver.not_tagged_controller"/>
       </argument>
       <argument type="service" id=".service_locator.vsAfDr."/>
-    </service>
-    <service id="security.csrf.same_origin_token_manager.inner" class="Symfony\Component\Security\Csrf\CsrfTokenManager">
-      <argument type="service" id="security.csrf.token_generator"/>
-      <argument type="service" id="security.csrf.token_storage"/>
-      <argument type="service" id="request_stack" on-invalid="ignore"/>
     </service>
     <service id="debug.serializer.inner" class="Symfony\Component\Serializer\Serializer">
       <argument type="collection">
@@ -11938,6 +11814,23 @@
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       </call>
     </service>
+    <service id="doctrine.result_cache_pool.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
+      <argument>PFCpycLoij</argument>
+      <argument>0</argument>
+      <argument>C:\Users\Alex\Ecoride\ecoride-back\var\cache\dev/pools/app</argument>
+      <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
+      <call method="setLogger">
+        <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
+      </call>
+    </service>
+    <service id="doctrine.system_cache_pool.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
+      <argument>Q-2ZFJcoCl</argument>
+      <argument>0</argument>
+      <argument>%container.build_id%</argument>
+      <argument>C:\Users\Alex\Ecoride\ecoride-back\var\cache\dev/pools/system</argument>
+      <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
+      <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
+    </service>
     <service id="cache.validator_expression_language.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
       <argument>Urer39UQ9R</argument>
       <argument>0</argument>
@@ -11946,8 +11839,6 @@
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
-    <service id="cache.doctrine.orm.default.result.recorder_inner" class="Symfony\Component\Cache\Adapter\ArrayAdapter"/>
-    <service id="cache.doctrine.orm.default.query.recorder_inner" class="Symfony\Component\Cache\Adapter\ArrayAdapter"/>
     <service id="cache.security_expression_language.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
       <argument>FSHKWr4kIx</argument>
       <argument>0</argument>
@@ -12102,12 +11993,22 @@
     <service id="cache.default_redis_provider" alias=".cache_connection.MfCypIA"/>
     <service id="cache.default_memcached_provider" alias=".cache_connection.8kvDmRs"/>
     <service id="cache.default_doctrine_dbal_provider" alias="doctrine.dbal.default_connection"/>
-    <service id="SessionHandlerInterface" alias="session.handler.native"/>
-    <service id="session.storage.factory" alias="session.storage.factory.native"/>
-    <service id="session.handler" alias="session.handler.native"/>
+    <service id=".Symfony\Contracts\Cache\TagAwareCacheInterface $doctrine.result_cache_pool" alias=".doctrine.result_cache_pool.taggable"/>
+    <service id="Symfony\Contracts\Cache\TagAwareCacheInterface $doctrineResultCachePool" alias=".doctrine.result_cache_pool.taggable"/>
+    <service id=".Symfony\Contracts\Cache\CacheInterface $doctrine.result_cache_pool" alias="doctrine.result_cache_pool"/>
+    <service id="Symfony\Contracts\Cache\CacheInterface $doctrineResultCachePool" alias="doctrine.result_cache_pool"/>
+    <service id=".Psr\Cache\CacheItemPoolInterface $doctrine.result_cache_pool" alias="doctrine.result_cache_pool"/>
+    <service id="Psr\Cache\CacheItemPoolInterface $doctrineResultCachePool" alias="doctrine.result_cache_pool"/>
+    <service id=".Symfony\Contracts\Cache\TagAwareCacheInterface $doctrine.system_cache_pool" alias=".doctrine.system_cache_pool.taggable"/>
+    <service id="Symfony\Contracts\Cache\TagAwareCacheInterface $doctrineSystemCachePool" alias=".doctrine.system_cache_pool.taggable"/>
+    <service id=".Symfony\Contracts\Cache\CacheInterface $doctrine.system_cache_pool" alias="doctrine.system_cache_pool"/>
+    <service id="Symfony\Contracts\Cache\CacheInterface $doctrineSystemCachePool" alias="doctrine.system_cache_pool"/>
+    <service id=".Psr\Cache\CacheItemPoolInterface $doctrine.system_cache_pool" alias="doctrine.system_cache_pool"/>
+    <service id="Psr\Cache\CacheItemPoolInterface $doctrineSystemCachePool" alias="doctrine.system_cache_pool"/>
     <service id="Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface" alias="security.csrf.token_generator"/>
     <service id="Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface" alias="security.csrf.token_storage"/>
     <service id="Symfony\Component\Security\Csrf\CsrfTokenManagerInterface" alias="security.csrf.same_origin_token_manager"/>
+    <service id="security.csrf.token_manager" alias="security.csrf.same_origin_token_manager"/>
     <service id="Symfony\Component\Form\ResolvedFormTypeFactoryInterface" alias="form.resolved_type_factory"/>
     <service id="Symfony\Component\Form\FormRegistryInterface" alias="form.registry"/>
     <service id="Symfony\Component\Form\FormFactoryInterface" alias="form.factory"/>
@@ -12132,8 +12033,8 @@
     <service id="Doctrine\ORM\EntityManagerInterface" alias="doctrine.orm.default_entity_manager"/>
     <service id="doctrine.orm.entity_manager" alias="doctrine.orm.default_entity_manager" public="true"/>
     <service id="doctrine.orm.default_metadata_cache" alias="cache.doctrine.orm.default.metadata"/>
-    <service id="doctrine.orm.default_result_cache" alias="cache.doctrine.orm.default.result"/>
-    <service id="doctrine.orm.default_query_cache" alias="cache.doctrine.orm.default.query"/>
+    <service id="doctrine.orm.default_result_cache" alias="doctrine.result_cache_pool"/>
+    <service id="doctrine.orm.default_query_cache" alias="doctrine.system_cache_pool"/>
     <service id="Doctrine\ORM\EntityManagerInterface $defaultEntityManager" alias="doctrine.orm.default_entity_manager"/>
     <service id="doctrine.orm.default_entity_manager.event_manager" alias="doctrine.dbal.default_connection.event_manager"/>
     <service id="doctrine.migrations.metadata_storage" alias="doctrine.migrations.storage.table_storage"/>
@@ -12141,7 +12042,7 @@
     <service id="Symfony\Component\Mime\BodyRendererInterface" alias="twig.mime_body_renderer"/>
     <service id="Symfony\UX\Turbo\Broadcaster\BroadcasterInterface" alias="turbo.broadcaster.action_renderer"/>
     <service id="Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface" alias="security.authorization_checker"/>
-    <service id="Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface" alias="security.token_storage"/>
+    <service id="Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface" alias="security.untracked_token_storage"/>
     <service id="Symfony\Bundle\SecurityBundle\Security" alias="security.helper"/>
     <service id="Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface" alias="security.authentication.session_strategy"/>
     <service id="Symfony\Component\Security\Http\Authentication\AuthenticationUtils" alias="security.authentication_utils"/>
@@ -12222,9 +12123,10 @@
     <service id="api_platform.message_bus" alias="debug.traced.messenger.bus.default"/>
     <service id="api_platform.security.expression_language" alias="security.expression_language"/>
     <service id="ApiPlatform\Symfony\Security\ResourceAccessCheckerInterface" alias="api_platform.security.resource_access_checker"/>
+    <service id="security.token_storage" alias="security.untracked_token_storage" public="true"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.pRu6x_4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.9tPpswS"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.pzAAJKB"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.BxSdgVt"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -12297,7 +12199,6 @@
     <service id="event_dispatcher" alias="debug.event_dispatcher" public="true"/>
     <service id="controller_resolver" alias="debug.controller_resolver"/>
     <service id="argument_resolver" alias="debug.argument_resolver"/>
-    <service id="security.csrf.token_manager" alias="security.csrf.same_origin_token_manager"/>
     <service id="translator.data_collector.inner" alias="translator.default"/>
     <service id="serializer" alias="debug.serializer"/>
     <service id="var_dumper.cli_dumper" alias="var_dumper.contextualized_cli_dumper"/>
@@ -12338,8 +12239,9 @@
     <service id=".service_locator.n_ENPtW" alias=".service_locator.zHyJIs5"/>
     <service id=".service_locator.hNMhKaf" alias=".service_locator.OzEre6h"/>
     <service id=".service_locator.Nrz07Zz" alias=".service_locator.3QECKYg"/>
-    <service id=".service_locator.h5CdKCi" alias=".service_locator.MEs4xNG"/>
+    <service id=".service_locator.VOdlOa_" alias=".service_locator.gcAlB65"/>
     <service id=".service_locator.uozl2iU" alias=".service_locator.i.fVVTo"/>
+    <service id=".service_locator.h5CdKCi" alias=".service_locator.MEs4xNG"/>
     <service id=".service_locator.9nvaCmp" alias=".service_locator.ZyP9f7K"/>
   </services>
 </container>

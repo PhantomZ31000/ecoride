@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  database:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_DATABASE: ecoride
+    ports:
+      - "3307:3306"
+    networks:
+      - ecoride-back_default
+    volumes:
+      - database_data:/var/lib/mysql
+
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "51821:8025"
+      - "51822:1025"
+    restart: always
+
+volumes:
+  database_data:
