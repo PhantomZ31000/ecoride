@@ -16,7 +16,7 @@ return [
         '/_profiler/xdebug' => [[['_route' => '_profiler_xdebug', '_controller' => 'web_profiler.controller.profiler::xdebugAction'], null, null, null, false, false, null]],
         '/_profiler/open' => [[['_route' => '_profiler_open_file', '_controller' => 'web_profiler.controller.profiler::openAction'], null, null, null, false, false, null]],
         '/' => [[['_route' => 'app_accueil', '_controller' => 'App\\Controller\\AccueilController::index'], null, null, null, false, false, null]],
-        '/espace-administrateur' => [[['_route' => 'app_espace_administrateur', '_controller' => 'App\\Controller\\AdminController::index'], null, null, null, false, false, null]],
+        '/admin' => [[['_route' => 'app_admin', '_controller' => 'App\\Controller\\AdminController::index'], null, null, null, false, false, null]],
         '/connexion' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\AuthentificationController::login'], null, null, null, false, false, null]],
         '/deconnexion' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\AuthentificationController::logout'], null, null, null, false, false, null]],
         '/avis' => [[['_route' => 'app_avis', '_controller' => 'App\\Controller\\AvisController::index'], null, null, null, false, false, null]],
@@ -24,7 +24,7 @@ return [
         '/espace-employe' => [[['_route' => 'app_espace_employe', '_controller' => 'App\\Controller\\EmployeController::index'], null, null, null, false, false, null]],
         '/profil' => [[['_route' => 'app_profil', '_controller' => 'App\\Controller\\ProfilController::index'], null, null, null, false, false, null]],
         '/proposition' => [[['_route' => 'app_proposition', '_controller' => 'App\\Controller\\PropositionController::index'], null, null, null, false, false, null]],
-        '/recherche' => [[['_route' => 'app_recherche', '_controller' => 'App\\Controller\\RechercheController::index'], null, null, null, false, false, null]],
+        '/recherche' => [[['_route' => 'app_recherche', '_controller' => 'App\\Controller\\RechercheController::recherche'], null, null, null, false, false, null]],
         '/api/stats/covoiturages-par-jour' => [[['_route' => 'app_stats_covoiturages_par_jour', '_controller' => 'App\\Controller\\StatsController::covoituragesParJour'], null, null, null, false, false, null]],
         '/api/stats/credits-par-jour' => [[['_route' => 'app_stats_credits_par_jour', '_controller' => 'App\\Controller\\StatsController::creditsParJour'], null, null, null, false, false, null]],
         '/api/stats/total-credits' => [[['_route' => 'app_stats_total_credits', '_controller' => 'App\\Controller\\StatsController::totalCredits'], null, null, null, false, false, null]],
@@ -141,15 +141,9 @@ return [
                         .')'
                     .')'
                 .')'
-                .'|/espace\\-(?'
-                    .'|administrateur/(?'
-                        .'|suspendre\\-utilisateur/([^/]++)(*:1393)'
-                        .'|activer\\-utilisateur/([^/]++)(*:1431)'
-                    .')'
-                    .'|employe/(?'
-                        .'|valider\\-avis/([^/]++)(*:1474)'
-                        .'|refuser\\-avis/([^/]++)(*:1505)'
-                    .')'
+                .'|/espace\\-employe/(?'
+                    .'|valider\\-avis/([^/]++)(*:1374)'
+                    .'|refuser\\-avis/([^/]++)(*:1405)'
                 .')'
             .')/?$}sDu',
     ],
@@ -241,10 +235,8 @@ return [
         1295 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
         1309 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
         1320 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
-        1393 => [[['_route' => 'app_suspendre_utilisateur', '_controller' => 'App\\Controller\\AdminController::suspendreUtilisateur'], ['id'], null, null, false, true, null]],
-        1431 => [[['_route' => 'app_activer_utilisateur', '_controller' => 'App\\Controller\\AdminController::activerUtilisateur'], ['id'], null, null, false, true, null]],
-        1474 => [[['_route' => 'app_valider_avis', '_controller' => 'App\\Controller\\EmployeController::validerAvis'], ['id'], null, null, false, true, null]],
-        1505 => [
+        1374 => [[['_route' => 'app_valider_avis', '_controller' => 'App\\Controller\\EmployeController::validerAvis'], ['id'], null, null, false, true, null]],
+        1405 => [
             [['_route' => 'app_refuser_avis', '_controller' => 'App\\Controller\\EmployeController::refuserAvis'], ['id'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

@@ -2,18 +2,25 @@
 
 namespace App\Controller;
 
+use App\Repository\CovoiturageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class RechercheController extends AbstractController
 {
     #[Route('/recherche', name: 'app_recherche')]
-    public function index(): Response
+    public function recherche(Request $request, CovoiturageRepository $covoiturageRepository): JsonResponse
     {
-        // Logique pour récupérer les covoiturages en fonction des critères de recherche //
+        $depart = $request->query->get('depart');
+        $arrivee = $request->query->get('arrivee');
+        $date = $request->query->get('date');
 
-        return $this->render('recherche/index.html.twig', [
+        // Searching covoiturages based on the provided criteria
+        $covoiturages = $covoiturageRepository->findByCriteria($depart, $arrivee, $date);
+
+        return $this->json([
             'covoiturages' => $covoiturages,
         ]);
     }
