@@ -23,7 +23,11 @@ class Parametre extends \App\Entity\Parametre implements \Doctrine\ORM\Proxy\Int
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
         "\0".parent::class."\0".'id' => [parent::class, 'id', null],
+        "\0".parent::class."\0".'name' => [parent::class, 'name', null],
+        "\0".parent::class."\0".'value' => [parent::class, 'value', null],
         'id' => [parent::class, 'id', null],
+        'name' => [parent::class, 'name', null],
+        'value' => [parent::class, 'value', null],
     ];
 
     public function __isInitialized(): bool

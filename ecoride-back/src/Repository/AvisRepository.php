@@ -16,28 +16,51 @@ class AvisRepository extends ServiceEntityRepository
         parent::__construct($registry, Avis::class);
     }
 
-    //    /**
-    //     * @return Avis[] Returns an array of Avis objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('a.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Trouve les avis par passager
+     *
+     * @param int $passagerId
+     * @return Avis[] Returns an array of Avis objects
+     */
+    public function findByPassager(int $passagerId): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.passager = :passagerId')
+            ->setParameter('passagerId', $passagerId)
+            ->orderBy('a.date_avis', 'DESC') // Tri par date d'avis, du plus récent au plus ancien
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Avis
-    //    {
-    //        return $this->createQueryBuilder('a')
-    //            ->andWhere('a.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Trouve les avis par conducteur
+     *
+     * @param int $conducteurId
+     * @return Avis[] Returns an array of Avis objects
+     */
+    public function findByConducteur(int $conducteurId): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.conducteur = :conducteurId')
+            ->setParameter('conducteurId', $conducteurId)
+            ->orderBy('a.date_avis', 'DESC') // Tri par date d'avis, du plus récent au plus ancien
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Trouve les avis par covoiturage
+     *
+     * @param int $covoiturageId
+     * @return Avis[] Returns an array of Avis objects
+     */
+    public function findByCovoiturage(int $covoiturageId): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.covoiturage = :covoiturageId')
+            ->setParameter('covoiturageId', $covoiturageId)
+            ->orderBy('a.date_avis', 'DESC') // Tri par date d'avis, du plus récent au plus ancien
+            ->getQuery()
+            ->getResult();
+    }
 }

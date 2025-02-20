@@ -15,19 +15,31 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Metadata\ApiFilter;
 
 #[ORM\Entity(repositoryClass: VoitureRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(normalizationContext: ['groups' => ['voiture:list']]),
-        new Get(normalizationContext: ['groups' => ['voiture:item']]),
+        new GetCollection(
+            normalizationContext: ['groups' => ['voiture:list']],
+            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['voiture:item']],
+            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
+        ),
         new Post(
             denormalizationContext: ['groups' => ['voiture:create']],
-            normalizationContext: ['groups' => ['voiture:item']]
+            normalizationContext: ['groups' => ['voiture:item']],
+            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
         ),
-        new Put(denormalizationContext: ['groups' => ['voiture:update']]),
-        new Delete()
+        new Put(
+            denormalizationContext: ['groups' => ['voiture:update']],
+            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
+        ),
+        new Delete(
+            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
+        )
     ],
 )]
 #[ApiFilter(SearchFilter::class, properties: ['modele' => 'partial', 'marque' => 'partial'])]
@@ -36,35 +48,44 @@ class Voiture
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['voiture:list', 'voiture:item'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)] // Ajout du type ORM
+    #[ORM\Column(length: 255)]
     #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
-    private ?string $modele = null; // Définition du type
+    private ?string $modele = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
     private ?string $immatriculation = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
     private ?string $energie = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
     private ?string $couleur = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
     private ?string $marque = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
     private ?\DateTimeInterface $premiere_immatriculation = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
     private ?int $nombre_places = null;
 
     #[ORM\ManyToOne(inversedBy: 'voitures')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['voiture:list', 'voiture:item', 'voiture:create', 'voiture:update'])]
     private ?User $utilisateur = null;
 
     #[ORM\OneToMany(targetEntity: Covoiturage::class, mappedBy: 'voiture')]
+    #[Groups(['voiture:item'])]
     private Collection $covoiturages;
 
     public function __construct()

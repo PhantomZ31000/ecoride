@@ -21,66 +21,65 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // Créer des utilisateurs
-        $user1 = new User();
-        $user1->setEmail('user1@example.com');
-        $user1->setPassword($this->passwordHasher->hashPassword($user1, 'password'));
-        $user1->setPseudo('user1');
-        $user1->setRole('conducteur');
-        $manager->persist($user1);
-
-        $user2 = new User();
-        $user2->setEmail('user2@example.com');
-        $user2->setPassword($this->passwordHasher->hashPassword($user2, 'password'));
-        $user2->setPseudo('user2');
-        $user2->setRole('passager');
-        $manager->persist($user2);
-
+        // Créer un utilisateur administrateur
         $admin = new User();
         $admin->setEmail('admin@example.com');
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'adminpassword'));
         $admin->setPseudo('admin');
         $admin->setRoles(['ROLE_ADMIN']);
-        $admin->setRole('admin'); // Assurez-vous que le rôle est défini comme 'admin'
+        $admin->setRole('admin');
         $manager->persist($admin);
 
+        // Créer un utilisateur employé
         $employe = new User();
         $employe->setEmail('employe@example.com');
         $employe->setPassword($this->passwordHasher->hashPassword($employe, 'employepassword'));
         $employe->setPseudo('employe');
         $employe->setRoles(['ROLE_EMPLOYE']);
-        $employe->setRole('employe'); // Assurez-vous que le rôle est défini comme 'employe'
+        $employe->setRole('employe');
         $manager->persist($employe);
 
-        // Créer des voitures
-        $voiture1 = new Voiture();
-        $voiture1->setModele('Clio');
-        $voiture1->setImmatriculation('AA-123-BB');
-        $voiture1->setEnergie('essence');
-        $voiture1->setUtilisateur($user1);
-        $manager->persist($voiture1);
+        // Créer plusieurs utilisateurs avec différents rôles
+        for ($i = 1; $i <= 10; $i++) {
+            $user = new User();
+            $user->setEmail('user'. $i. '@example.com');
+            $user->setPassword($this->passwordHasher->hashPassword($user, 'password'));
+            $user->setPseudo('user'. $i);
+            $user->setRole($i % 2 === 0? 'conducteur': 'passager');
+            $manager->persist($user);
 
-        // Créer des covoiturages
-        $covoiturage1 = new Covoiturage();
-        $covoiturage1->setLieuDepart('Toulouse');
-        $covoiturage1->setLieuArrivee('Paris');
-        $covoiturage1->setDateDepart(new \DateTime('2025-03-15'));
-        $covoiturage1->setHeureDepart(new \DateTime('08:00:00'));
-        $covoiturage1->setPrix(50.00);
-        $covoiturage1->setNombrePlacesDisponibles(3);
-        $covoiturage1->setConducteur($user1);
-        $covoiturage1->setVoiture($voiture1);
-        $manager->persist($covoiturage1);
+            // Créer des voitures pour les conducteurs
+            if ($i % 2 === 0) {
+                $voiture = new Voiture();
+                $voiture->setModele('Voiture '. $i);
+                $voiture->setImmatriculation('AA-'. $i. $i. $i. '-BB');
+                $voiture->setEnergie('essence');
+                $voiture->setUtilisateur($user);
+                $manager->persist($voiture);
 
-        // Créer des avis
-        $avis1 = new Avis();
-        $avis1->setPassager($user2);
-        $avis1->setConducteur($user1);
-        $avis1->setCovoiturage($covoiturage1);
-        $avis1->setNote(4);
-        $avis1->setCommentaire('Super trajet!');
-        $avis1->setDateAvis(new \DateTime());
-        $manager->persist($avis1);
+                // Créer des covoiturages pour les conducteurs
+                $covoiturage = new Covoiturage();
+                $covoiturage->setLieuDepart('Ville '. $i);
+                $covoiturage->setLieuArrivee('Ville '. ($i + 1));
+                $covoiturage->setDateDepart(new \DateTime('now + '. $i. ' days'));
+                $covoiturage->setHeureDepart(new \DateTime('08:00:00'));
+                $covoiturage->setPrix(20 + $i);
+                $covoiturage->setNombrePlacesDisponibles(4);
+                $covoiturage->setConducteur($user);
+                $covoiturage->setVoiture($voiture);
+                $manager->persist($covoiturage);
+
+                // Créer des avis pour les covoiturages
+                $avis = new Avis();
+                $avis->setPassager($user); // Utiliser un utilisateur passager existant
+                $avis->setConducteur($admin); // Utiliser un utilisateur conducteur existant
+                $avis->setCovoiturage($covoiturage); // Utiliser un covoiturage existant
+                $avis->setNote(rand(1, 5));
+                $avis->setCommentaire('Commentaire test');
+                $avis->setDateAvis(new \DateTime('now - '. $i. ' days'));
+                $manager->persist($avis);
+            }
+        }
 
         $manager->flush();
     }

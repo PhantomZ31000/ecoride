@@ -10,15 +10,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CovoiturageController extends AbstractController
 {
-    #[Route('/covoiturage', name: 'app_covoiturage')]
+    #[Route('/api/covoiturages', name: 'app_covoiturage', methods: ['GET'])]
     public function index(CovoiturageRepository $covoiturageRepository, SerializerInterface $serializer): JsonResponse
     {
-        // Fetching covoiturages from the database
+        // Récupérer les covoiturages depuis la base de données
         $covoiturages = $covoiturageRepository->findAll();
 
-        // Serializing the data to convert it to a JSON-friendly format
+        // Sérialiser les données pour les rendre au format JSON
         $data = $serializer->normalize($covoiturages, null, ['groups' => 'covoiturage:read']);
 
+        // Retourner les données au format JSON
         return $this->json([
             'covoiturages' => $data,
         ]);

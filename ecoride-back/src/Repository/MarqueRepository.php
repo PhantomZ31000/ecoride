@@ -16,28 +16,36 @@ class MarqueRepository extends ServiceEntityRepository
         parent::__construct($registry, Marque::class);
     }
 
-    //    /**
-    //     * @return Marque[] Returns an array of Marque objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    // Ajoute des méthodes personnalisées si nécessaire.
 
-    //    public function findOneBySomeField($value): ?Marque
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Trouve une Marque par son nom
+     *
+     * @param string $nom
+     * @return Marque[] Retourne un tableau de Marque
+     */
+    public function findByName(string $name): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.name LIKE :name') // Vérifie que le champ 'name' existe dans l'entité Marque
+            ->setParameter('name', '%' . $name . '%')
+            ->orderBy('m.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Trouve une Marque par son ID
+     *
+     * @param int $id
+     * @return Marque|null Retourne une Marque ou null
+     */
+    public function findById(int $id): ?Marque
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

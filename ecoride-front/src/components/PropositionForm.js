@@ -10,26 +10,30 @@ function PropositionForm() {
   const [prix, setPrix] = useState('');
   const [nombrePlacesDisponibles, setNombrePlacesDisponibles] = useState('');
   const [conducteur, setConducteur] = useState(null);
-  const [voitures, setVoitures] = useState();
+  const [voitures, setVoitures] = useState([]);
   const [voitureId, setVoitureId] = useState('');
 
   useEffect(() => {
-    // Récupérer l'utilisateur connecté (remplacez 1 par l'ID de l'utilisateur connecté)
-    fetch('http://127.0.0.1:8000/api/users/1')
-    .then(response => response.json())
-    .then(data => setConducteur(data));
+    const userId = 1; // Remplacez avec l'ID dynamique de l'utilisateur connecté si nécessaire
 
-    // Récupérer les voitures de l'utilisateur connecté
-    fetch('/api/voitures')
-    .then(response => response.json())
-    .then(data => setVoitures(data));
-  },);
+    // Récupérer l'utilisateur connecté
+    fetch(`http://127.0.0.1:8000/api/users/${userId}`)
+      .then((response) => response.json())
+      .then((data) => setConducteur(data))
+      .catch((error) => console.error('Erreur lors de la récupération de l\'utilisateur:', error));
+
+    // Récupérer les voitures de l'utilisateur
+    fetch('http://127.0.0.1:8000/api/voitures') // Vérifiez que cette URL est correcte
+      .then((response) => response.json())
+      .then((data) => setVoitures(data))
+      .catch((error) => console.error('Erreur lors de la récupération des voitures:', error));
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch('/api/covoiturages', {
+      const response = await fetch('http://127.0.0.1:8000/api/covoiturages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,18 +45,16 @@ function PropositionForm() {
           heureDepart,
           prix,
           nombrePlacesDisponibles,
-          conducteur: '/api/users/1', // Remplacez 1 par l'ID de l'utilisateur connecté
+          conducteur: `/api/users/1`, // Remplacez 1 par l'ID de l'utilisateur connecté
           voiture: `/api/voitures/${voitureId}`,
         }),
       });
 
       if (response.ok) {
-        // Rediriger l'utilisateur vers la page de profil après la proposition
-        window.location.href = '/profil';
+        window.location.href = '/profil'; // Rediriger vers le profil après soumission
       } else {
-        // Afficher un message d'erreur
         const data = await response.json();
-        alert(data.message);
+        alert(data.message); // Afficher le message d'erreur
       }
     } catch (error) {
       console.error('Erreur lors de la proposition:', error);
@@ -75,6 +77,7 @@ function PropositionForm() {
           onChange={(e) => setLieuDepart(e.target.value)}
         />
       </Form.Group>
+
       <Form.Group controlId="lieuArrivee">
         <Form.Label>Lieu d'arrivée:</Form.Label>
         <Form.Control
@@ -84,6 +87,7 @@ function PropositionForm() {
           onChange={(e) => setLieuArrivee(e.target.value)}
         />
       </Form.Group>
+
       <Form.Group controlId="dateDepart">
         <Form.Label>Date de départ:</Form.Label>
         <Form.Control
@@ -92,6 +96,7 @@ function PropositionForm() {
           onChange={(e) => setDateDepart(e.target.value)}
         />
       </Form.Group>
+
       <Form.Group controlId="heureDepart">
         <Form.Label>Heure de départ:</Form.Label>
         <Form.Control
@@ -100,6 +105,7 @@ function PropositionForm() {
           onChange={(e) => setHeureDepart(e.target.value)}
         />
       </Form.Group>
+
       <Form.Group controlId="prix">
         <Form.Label>Prix:</Form.Label>
         <Form.Control
@@ -109,6 +115,7 @@ function PropositionForm() {
           onChange={(e) => setPrix(e.target.value)}
         />
       </Form.Group>
+
       <Form.Group controlId="nombrePlacesDisponibles">
         <Form.Label>Nombre de places disponibles:</Form.Label>
         <Form.Control
@@ -118,6 +125,7 @@ function PropositionForm() {
           onChange={(e) => setNombrePlacesDisponibles(e.target.value)}
         />
       </Form.Group>
+
       <Form.Group controlId="voiture">
         <Form.Label>Voiture:</Form.Label>
         <Form.Control
@@ -133,6 +141,7 @@ function PropositionForm() {
           ))}
         </Form.Control>
       </Form.Group>
+
       <Button variant="primary" type="submit">
         Proposer
       </Button>

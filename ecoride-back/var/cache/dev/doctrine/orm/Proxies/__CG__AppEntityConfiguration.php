@@ -23,7 +23,11 @@ class Configuration extends \App\Entity\Configuration implements \Doctrine\ORM\P
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
         "\0".parent::class."\0".'id' => [parent::class, 'id', null],
+        "\0".parent::class."\0".'parameterKey' => [parent::class, 'parameterKey', null],
+        "\0".parent::class."\0".'parameterValue' => [parent::class, 'parameterValue', null],
         'id' => [parent::class, 'id', null],
+        'parameterKey' => [parent::class, 'parameterKey', null],
+        'parameterValue' => [parent::class, 'parameterValue', null],
     ];
 
     public function __isInitialized(): bool

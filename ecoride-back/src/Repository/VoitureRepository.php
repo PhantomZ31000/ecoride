@@ -16,28 +16,50 @@ class VoitureRepository extends ServiceEntityRepository
         parent::__construct($registry, Voiture::class);
     }
 
-    //    /**
-    //     * @return Voiture[] Returns an array of Voiture objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('v.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Recherche des voitures par modèle
+     *
+     * @param string $modele
+     * @return Voiture[] Retourne un tableau de Voiture
+     */
+    public function findByModele(string $modele): array
+    {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.modele LIKE :modele')
+            ->setParameter('modele', '%' . $modele . '%')
+            ->orderBy('v.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Voiture
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Recherche des voitures par marque
+     *
+     * @param string $marque
+     * @return Voiture[] Retourne un tableau de Voiture
+     */
+    public function findByMarque(string $marque): array
+    {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.marque LIKE :marque')
+            ->setParameter('marque', '%' . $marque . '%')
+            ->orderBy('v.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Recherche des voitures par immatriculation
+     *
+     * @param string $immatriculation
+     * @return Voiture|null Retourne une voiture ou null
+     */
+    public function findByImmatriculation(string $immatriculation): ?Voiture
+    {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.immatriculation = :immatriculation')
+            ->setParameter('immatriculation', $immatriculation)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

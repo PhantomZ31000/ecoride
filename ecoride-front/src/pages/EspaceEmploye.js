@@ -4,10 +4,18 @@ import CovoituragesProblemes from '../components/CovoituragesProblemes';
 
 function EspaceEmploye() {
   return (
-    <div>
+    <div className="employe-dashboard">
       <h1>Espace Employé</h1>
-      <AvisValidation />
-      <CovoituragesProblemes />
+
+      <section className="employe-section">
+        <h2>Validation des Avis</h2>
+        <AvisValidation />
+      </section>
+
+      <section className="employe-section">
+        <h2>Covoiturages Problématiques</h2>
+        <CovoituragesProblemes />
+      </section>
     </div>
   );
 }

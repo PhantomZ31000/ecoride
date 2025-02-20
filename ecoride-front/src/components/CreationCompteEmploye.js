@@ -6,12 +6,16 @@ function CreationCompteEmploye() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(null); // Réinitialise l'erreur
+    setIsLoading(true); // Active le chargement
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/users', { // Assurez-vous que l'URL de l'API est correcte
+      const response = await fetch('http://127.0.0.1:8000/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,16 +33,20 @@ function CreationCompteEmploye() {
       } else {
         // Afficher un message d'erreur
         const data = await response.json();
-        alert(data.message);
+        setError(data.message || 'Une erreur est survenue');
       }
     } catch (error) {
       console.error('Erreur lors de la création du compte employé:', error);
-      alert('Une erreur est survenue lors de la création du compte employé.');
+      setError('Une erreur est survenue lors de la création du compte employé.');
+    } finally {
+      setIsLoading(false); // Désactive le chargement
     }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
+      {error && <div className="error-message">{error}</div>} {/* Affichage de l'erreur */}
+      
       <Form.Group controlId="username">
         <Form.Label>Nom d'utilisateur:</Form.Label>
         <Form.Control
@@ -46,8 +54,10 @@ function CreationCompteEmploye() {
           placeholder="Entrez le nom d'utilisateur"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          required
         />
       </Form.Group>
+      
       <Form.Group controlId="email">
         <Form.Label>Adresse email:</Form.Label>
         <Form.Control
@@ -55,8 +65,10 @@ function CreationCompteEmploye() {
           placeholder="Entrez l'adresse email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
       </Form.Group>
+      
       <Form.Group controlId="password">
         <Form.Label>Mot de passe:</Form.Label>
         <Form.Control
@@ -64,10 +76,12 @@ function CreationCompteEmploye() {
           placeholder="Entrez le mot de passe"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
       </Form.Group>
-      <Button variant="primary" type="submit">
-        Créer le compte
+      
+      <Button variant="primary" type="submit" disabled={isLoading}>
+        {isLoading ? 'Chargement...' : 'Créer le compte'}
       </Button>
     </Form>
   );

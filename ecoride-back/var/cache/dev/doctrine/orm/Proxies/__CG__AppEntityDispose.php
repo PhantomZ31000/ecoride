@@ -23,7 +23,9 @@ class Dispose extends \App\Entity\Dispose implements \Doctrine\ORM\Proxy\Interna
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
         "\0".parent::class."\0".'id' => [parent::class, 'id', null],
+        "\0".parent::class."\0".'name' => [parent::class, 'name', null],
         'id' => [parent::class, 'id', null],
+        'name' => [parent::class, 'name', null],
     ];
 
     public function __isInitialized(): bool

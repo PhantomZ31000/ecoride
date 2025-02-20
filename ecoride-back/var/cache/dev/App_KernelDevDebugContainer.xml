@@ -28,6 +28,7 @@
       <parameter key="NelmioCorsBundle">Nelmio\CorsBundle\NelmioCorsBundle</parameter>
       <parameter key="ApiPlatformBundle">ApiPlatform\Symfony\Bundle\ApiPlatformBundle</parameter>
       <parameter key="DoctrineFixturesBundle">Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle</parameter>
+      <parameter key="LexikJWTAuthenticationBundle">Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -89,6 +90,10 @@
       <parameter key="DoctrineFixturesBundle" type="collection">
         <parameter key="path">C:\Users\Alex\Ecoride\ecoride-back\vendor\doctrine\doctrine-fixtures-bundle</parameter>
         <parameter key="namespace">Doctrine\Bundle\FixturesBundle</parameter>
+      </parameter>
+      <parameter key="LexikJWTAuthenticationBundle" type="collection">
+        <parameter key="path">C:\Users\Alex\Ecoride\ecoride-back\vendor\lexik\jwt-authentication-bundle</parameter>
+        <parameter key="namespace">Lexik\Bundle\JWTAuthenticationBundle</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -265,8 +270,21 @@
     </parameter>
     <parameter key="nelmio_cors.map" type="collection">
       <parameter key="^/api/" type="collection">
-        <parameter key="allow_origin">true</parameter>
-        <parameter key="allow_headers">true</parameter>
+        <parameter key="allow_origin" type="collection">
+          <parameter>http://localhost:3000</parameter>
+        </parameter>
+        <parameter key="allow_methods" type="collection">
+          <parameter>GET</parameter>
+          <parameter>POST</parameter>
+          <parameter>PUT</parameter>
+          <parameter>PATCH</parameter>
+          <parameter>DELETE</parameter>
+          <parameter>OPTIONS</parameter>
+        </parameter>
+        <parameter key="allow_headers" type="collection">
+          <parameter>content-type</parameter>
+          <parameter>authorization</parameter>
+        </parameter>
         <parameter key="expose_headers" type="collection">
           <parameter>Link</parameter>
         </parameter>
@@ -293,7 +311,7 @@
       </parameter>
       <parameter key="max_age">3600</parameter>
       <parameter key="hosts" type="collection"/>
-      <parameter key="origin_regex">true</parameter>
+      <parameter key="origin_regex">false</parameter>
       <parameter key="forced_allow_origin_value">null</parameter>
       <parameter key="skip_same_as_origin">true</parameter>
     </parameter>
@@ -447,6 +465,12 @@
     <parameter key="api_platform.validator.serialize_payload_fields" type="collection"/>
     <parameter key="api_platform.validator.query_parameter_validation">true</parameter>
     <parameter key="api_platform.elasticsearch.enabled">false</parameter>
+    <parameter key="lexik_jwt_authentication.pass_phrase">%env(JWT_PASSPHRASE)%</parameter>
+    <parameter key="lexik_jwt_authentication.token_ttl">3600</parameter>
+    <parameter key="lexik_jwt_authentication.clock_skew">0</parameter>
+    <parameter key="lexik_jwt_authentication.allow_no_expiration">false</parameter>
+    <parameter key="lexik_jwt_authentication.user_id_claim">username</parameter>
+    <parameter key="lexik_jwt_authentication.encoder.signature_algorithm">RS256</parameter>
     <parameter key="data_collector.templates" type="collection">
       <parameter key="data_collector.request" type="collection">
         <parameter>request</parameter>
@@ -570,6 +594,13 @@
         <argument type="service" id=".service_locator.ZyP9f7K.App\Controller\AdminController"/>
       </call>
     </service>
+    <service id="App\Controller\ApiRegistrationController" class="App\Controller\ApiRegistrationController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.ZyP9f7K.App\Controller\ApiRegistrationController"/>
+      </call>
+    </service>
     <service id="App\Controller\AuthentificationController" class="App\Controller\AuthentificationController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -619,11 +650,25 @@
         <argument type="service" id=".service_locator.ZyP9f7K.App\Controller\RechercheController"/>
       </call>
     </service>
+    <service id="App\Controller\RegistrationController" class="App\Controller\RegistrationController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.ZyP9f7K.App\Controller\RegistrationController"/>
+      </call>
+    </service>
     <service id="App\Controller\StatsController" class="App\Controller\StatsController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.ZyP9f7K.App\Controller\StatsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\UserController" class="App\Controller\UserController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.ZyP9f7K.App\Controller\UserController"/>
       </call>
     </service>
     <service id="App\Controller\VoitureController" class="App\Controller\VoitureController" public="true" autowire="true" autoconfigure="true">
@@ -636,6 +681,9 @@
     <service id="App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true">
       <tag name="doctrine.fixture.orm"/>
       <argument type="service" id="security.user_password_hasher"/>
+    </service>
+    <service id="App\Form\RegistrationType" class="App\Form\RegistrationType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
     </service>
     <service id="App\Repository\AvisRepository" class="App\Repository\AvisRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
@@ -669,6 +717,9 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Security\LoginFormAuthenticator" class="App\Security\LoginFormAuthenticator" autowire="true" autoconfigure="true">
+      <argument type="service" id="router.default"/>
+    </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
       <tag priority="100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">controller.argument_value_resolver</tag>
@@ -700,7 +751,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.pzAAJKB"/>
+      <argument type="service" id=".service_locator.sPPZzPi"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -1682,9 +1733,11 @@
       <argument type="service" id="form.registry"/>
       <argument type="collection">
         <argument>Symfony\Component\Form\Extension\Core\Type</argument>
+        <argument>App\Form</argument>
         <argument>Symfony\Bridge\Doctrine\Form\Type</argument>
       </argument>
       <argument type="collection">
+        <argument>App\Form\RegistrationType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\ChoiceType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FileType</argument>
@@ -2733,6 +2786,7 @@
           <argument>C:\Users\Alex\Ecoride\ecoride-back\vendor\nelmio\cors-bundle/translations</argument>
           <argument>C:\Users\Alex\Ecoride\ecoride-back\vendor\api-platform\symfony\Bundle/translations</argument>
           <argument>C:\Users\Alex\Ecoride\ecoride-back\vendor\doctrine\doctrine-fixtures-bundle/translations</argument>
+          <argument>C:\Users\Alex\Ecoride\ecoride-back\vendor\lexik\jwt-authentication-bundle/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
@@ -2755,6 +2809,7 @@
             <argument>C:\Users\Alex\Ecoride\ecoride-back\vendor\nelmio\cors-bundle/translations</argument>
             <argument>C:\Users\Alex\Ecoride\ecoride-back\vendor\api-platform\symfony\Bundle/translations</argument>
             <argument>C:\Users\Alex\Ecoride\ecoride-back\vendor\doctrine\doctrine-fixtures-bundle/translations</argument>
+            <argument>C:\Users\Alex\Ecoride\ecoride-back\vendor\lexik\jwt-authentication-bundle/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -3130,6 +3185,14 @@
           <argument>onConsoleCommand</argument>
         </argument>
         <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="turbo.kernel.request_listener"/>
+          <argument>__invoke</argument>
+        </argument>
+        <argument>256</argument>
       </call>
       <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
@@ -3729,7 +3792,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.pzAAJKB"/>
+      <argument type="service" id=".service_locator.sPPZzPi"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -4296,7 +4359,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.9QYCuGc"/>
+      <argument type="service" id=".service_locator._Y1FsFN"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -6696,6 +6759,10 @@
       <argument type="service" id="turbo.broadcaster.action_renderer"/>
       <argument>null</argument>
     </service>
+    <service id="turbo.kernel.request_listener" class="Symfony\UX\Turbo\Request\RequestListener">
+      <tag name="kernel.event_listener" event="kernel.request" priority="256"/>
+      <tag name="container.hot_path"/>
+    </service>
     <service id="twig.missing_extension_suggestor" class="Twig\Extra\TwigExtraBundle\MissingExtensionSuggestor"/>
     <service id="security.authorization_checker" class="Symfony\Component\Security\Core\Authorization\AuthorizationChecker">
       <argument type="service" id="security.untracked_token_storage"/>
@@ -6708,7 +6775,7 @@
       <argument type="service" id=".service_locator.NXTTdTW"/>
       <argument type="collection">
         <argument key="dev">null</argument>
-        <argument key="main">null</argument>
+        <argument key="main" type="service" id=".service_locator.KIfkn41"/>
       </argument>
     </service>
     <service id="security.user_value_resolver" class="Symfony\Component\Security\Http\Controller\UserValueResolver">
@@ -6803,6 +6870,14 @@
       <argument type="service" id="request_stack" on-invalid="null"/>
       <argument type="service" id="router.default" on-invalid="null"/>
       <argument type="service" id="security.untracked_token_storage" on-invalid="null"/>
+      <call method="registerListener">
+        <argument>main</argument>
+        <argument>logout</argument>
+        <argument>logout</argument>
+        <argument>_csrf_token</argument>
+        <argument>null</argument>
+        <argument>null</argument>
+      </call>
     </service>
     <service id="security.route_loader.logout" class="Symfony\Bundle\SecurityBundle\Routing\LogoutRouteLoader">
       <tag name="routing.route_loader"/>
@@ -6919,6 +6994,34 @@
         <argument type="service" id=".security.request_matcher.SQd1YgG"/>
         <argument type="collection">
           <argument>ROLE_ADMIN</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.Y6UZMWp"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.S.FPR_b"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.NbfjTYA"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.nKX3QJh"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
         </argument>
         <argument>null</argument>
       </call>
@@ -7226,7 +7329,10 @@
       <argument type="service" id=".service_locator.bsoXAxw"/>
       <argument type="service" id=".service_locator.xRvtKlk"/>
       <argument type="collection">
-        <argument key="main" type="collection"/>
+        <argument key="main" type="collection">
+          <argument type="service" id="debug.App\Security\LoginFormAuthenticator"/>
+          <argument type="service" id="debug.security.authenticator.form_login.main"/>
+        </argument>
       </argument>
       <argument>false</argument>
       <call method="setName">
@@ -7279,12 +7385,24 @@
       <argument>false</argument>
       <argument>security.user.provider.concrete.app_user_provider</argument>
       <argument>main</argument>
+      <argument>App\Security\LoginFormAuthenticator</argument>
       <argument>null</argument>
       <argument>null</argument>
+      <argument type="collection">
+        <argument>form_login</argument>
+        <argument>App\Security\LoginFormAuthenticator</argument>
+      </argument>
       <argument>null</argument>
-      <argument type="collection"/>
-      <argument>null</argument>
-      <argument>null</argument>
+      <argument type="collection">
+        <argument key="path">logout</argument>
+        <argument key="target">/</argument>
+        <argument key="enable_csrf">null</argument>
+        <argument key="csrf_token_id">logout</argument>
+        <argument key="csrf_parameter">_csrf_token</argument>
+        <argument key="invalidate_session">true</argument>
+        <argument key="clear_site_data" type="collection"/>
+        <argument key="delete_cookies" type="collection"/>
+      </argument>
     </service>
     <service id="security.listener.main.user_provider" class="Symfony\Component\Security\Http\EventListener\UserProviderListener">
       <tag name="kernel.event_listener" dispatcher="debug.security.event_dispatcher.main" event="Symfony\Component\Security\Http\Event\CheckPassportEvent" priority="2048" method="checkPassport"/>
@@ -7309,9 +7427,85 @@
       <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
       <argument type="service" id="security.authentication.session_strategy"/>
     </service>
+    <service id="security.logout_listener.main" class="Symfony\Component\Security\Http\Firewall\LogoutListener">
+      <argument type="service" id="security.untracked_token_storage"/>
+      <argument type="service" id="security.http_utils"/>
+      <argument type="service" id="debug.security.event_dispatcher.main"/>
+      <argument type="collection">
+        <argument key="csrf_parameter">_csrf_token</argument>
+        <argument key="csrf_token_id">logout</argument>
+        <argument key="logout_path">logout</argument>
+      </argument>
+    </service>
+    <service id="security.logout.listener.default.main" class="Symfony\Component\Security\Http\EventListener\DefaultLogoutListener">
+      <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
+      <argument type="service" id="security.http_utils"/>
+      <argument>/</argument>
+    </service>
+    <service id="security.logout.listener.session.main" class="Symfony\Component\Security\Http\EventListener\SessionLogoutListener">
+      <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
+    </service>
+    <service id="security.authenticator.form_login.main" class="Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator">
+      <argument type="service" id="security.http_utils"/>
+      <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
+      <argument type="service" id="security.authentication.success_handler.main.form_login"/>
+      <argument type="service" id="security.authentication.failure_handler.main.form_login"/>
+      <argument type="collection">
+        <argument key="login_path">login</argument>
+        <argument key="check_path">login</argument>
+        <argument key="use_forward">false</argument>
+        <argument key="username_parameter">_username</argument>
+        <argument key="password_parameter">_password</argument>
+        <argument key="csrf_parameter">_csrf_token</argument>
+        <argument key="csrf_token_id">authenticate</argument>
+        <argument key="enable_csrf">false</argument>
+        <argument key="post_only">true</argument>
+        <argument key="form_only">false</argument>
+      </argument>
+    </service>
+    <service id="security.authentication.success_handler.main.form_login" class="Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler">
+      <argument type="service" id="security.http_utils"/>
+      <argument type="collection"/>
+      <argument type="service" id="monolog.logger" on-invalid="null"/>
+      <call method="setOptions">
+        <argument type="collection">
+          <argument key="login_path">login</argument>
+          <argument key="always_use_default_target_path">false</argument>
+          <argument key="default_target_path">/</argument>
+          <argument key="target_path_parameter">_target_path</argument>
+          <argument key="use_referer">false</argument>
+        </argument>
+      </call>
+      <call method="setFirewallName">
+        <argument>main</argument>
+      </call>
+    </service>
+    <service id="security.authentication.failure_handler.main.form_login" class="Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler">
+      <argument type="service" id="http_kernel"/>
+      <argument type="service" id="security.http_utils"/>
+      <argument type="collection"/>
+      <argument type="service" id="monolog.logger.security" on-invalid="null"/>
+      <call method="setOptions">
+        <argument type="collection">
+          <argument key="login_path">login</argument>
+          <argument key="failure_path">null</argument>
+          <argument key="failure_forward">false</argument>
+          <argument key="failure_path_parameter">_failure_path</argument>
+        </argument>
+      </call>
+    </service>
+    <service id="debug.App\Security\LoginFormAuthenticator" class="Symfony\Component\Security\Http\Authenticator\Debug\TraceableAuthenticator">
+      <argument type="service" id="App\Security\LoginFormAuthenticator"/>
+    </service>
+    <service id="debug.security.authenticator.form_login.main" class="Symfony\Component\Security\Http\Authenticator\Debug\TraceableAuthenticator">
+      <argument type="service" id="security.authenticator.form_login.main"/>
+    </service>
     <service id="security.authenticator.manager.main" class="Symfony\Component\Security\Http\Authentication\AuthenticatorManager">
       <tag name="monolog.logger" channel="security"/>
-      <argument type="collection"/>
+      <argument type="collection">
+        <argument type="service" id="debug.App\Security\LoginFormAuthenticator"/>
+        <argument type="service" id="debug.security.authenticator.form_login.main"/>
+      </argument>
       <argument type="service" id="security.untracked_token_storage"/>
       <argument type="service" id="debug.security.event_dispatcher.main"/>
       <argument>main</argument>
@@ -7334,11 +7528,18 @@
       <argument type="service" id="security.authentication.trust_resolver"/>
       <argument type="service" id="security.http_utils"/>
       <argument>main</argument>
-      <argument>null</argument>
+      <argument type="service" id="App\Security\LoginFormAuthenticator"/>
       <argument>null</argument>
       <argument>null</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument>false</argument>
+    </service>
+    <service id=".service_locator.KIfkn41" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="App\Security\LoginFormAuthenticator" type="service_closure" id="App\Security\LoginFormAuthenticator"/>
+        <argument key="security.authenticator.form_login.main" type="service_closure" id="security.authenticator.form_login.main"/>
+      </argument>
     </service>
     <service id="security.firewall.map.context.main" class="Symfony\Bundle\SecurityBundle\Security\LazyFirewallContext">
       <argument type="iterator">
@@ -7348,7 +7549,7 @@
         <argument type="service" id="security.access_listener"/>
       </argument>
       <argument type="service" id="security.exception_listener.main"/>
-      <argument>null</argument>
+      <argument type="service" id="security.logout_listener.main"/>
       <argument type="service" id="security.firewall.map.config.main"/>
       <argument type="service" id="security.untracked_token_storage"/>
     </service>
@@ -7373,6 +7574,38 @@
     <service id=".security.request_matcher.SQd1YgG" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
       <argument type="collection">
         <argument type="service" id=".security.request_matcher.t6TpuBk"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.en3TgaH" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/users</argument>
+    </service>
+    <service id=".security.request_matcher.Y6UZMWp" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.en3TgaH"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher..tvo6Vp" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/login</argument>
+    </service>
+    <service id=".security.request_matcher.S.FPR_b" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher..tvo6Vp"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.FMnJHKr" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/logout</argument>
+    </service>
+    <service id=".security.request_matcher.NbfjTYA" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.FMnJHKr"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.FToOsoq" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/api/avis</argument>
+    </service>
+    <service id=".security.request_matcher.nKX3QJh" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.FToOsoq"/>
       </argument>
     </service>
     <service id="security.command.user_password_hash" class="Symfony\Component\PasswordHasher\Command\UserPasswordHashCommand">
@@ -7856,6 +8089,7 @@
       <argument type="collection">
         <argument key="annotated_app_entity_avis_api_platform_doctrine_orm_filter_search_filter" type="service_closure" id="annotated_app_entity_avis_api_platform_doctrine_orm_filter_search_filter"/>
         <argument key="annotated_app_entity_user_api_platform_doctrine_orm_filter_search_filter" type="service_closure" id="annotated_app_entity_user_api_platform_doctrine_orm_filter_search_filter"/>
+        <argument key="annotated_app_entity_voiture_api_platform_doctrine_orm_filter_search_filter" type="service_closure" id="annotated_app_entity_voiture_api_platform_doctrine_orm_filter_search_filter"/>
       </argument>
     </service>
     <service id="api_platform.symfony.uri_variables.transformer.ulid" class="ApiPlatform\Symfony\UriVariableTransformer\UlidUriVariableTransformer">
@@ -8711,6 +8945,143 @@
     <service id="doctrine.fixtures.purger.orm_purger_factory" class="Doctrine\Bundle\FixturesBundle\Purger\ORMPurgerFactory">
       <tag name="doctrine.fixtures.purger_factory" alias="default"/>
     </service>
+    <service id="lexik_jwt_authentication.jwt_manager" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager" public="true">
+      <argument type="service" id="lexik_jwt_authentication.encoder.lcobucci"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument>username</argument>
+      <argument type="service" id="lexik_jwt_authentication.payload_enrichment"/>
+    </service>
+    <service id="lexik_jwt_authentication.payload_enrichment.random_jti_enrichment" class="Lexik\Bundle\JWTAuthenticationBundle\Services\PayloadEnrichment\RandomJtiEnrichment"/>
+    <service id="lexik_jwt_authentication.payload_enrichment" class="Lexik\Bundle\JWTAuthenticationBundle\Services\PayloadEnrichment\ChainEnrichment">
+      <argument type="collection"/>
+    </service>
+    <service id="lexik_jwt_authentication.key_loader.abstract" abstract="true">
+      <argument></argument>
+      <argument></argument>
+      <argument>%env(JWT_PASSPHRASE)%</argument>
+      <argument type="collection"/>
+    </service>
+    <service id="lexik_jwt_authentication.key_loader.raw" class="Lexik\Bundle\JWTAuthenticationBundle\Services\KeyLoader\RawKeyLoader">
+      <argument>%env(resolve:JWT_SECRET_KEY)%</argument>
+      <argument>%env(resolve:JWT_PUBLIC_KEY)%</argument>
+      <argument>%env(JWT_PASSPHRASE)%</argument>
+      <argument type="collection"/>
+    </service>
+    <service id="lexik_jwt_authentication.encoder.lcobucci" class="Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder">
+      <argument type="service" id="lexik_jwt_authentication.jws_provider.lcobucci"/>
+    </service>
+    <service id="lexik_jwt_authentication.jws_provider.lcobucci" class="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\LcobucciJWSProvider">
+      <argument type="service" id="lexik_jwt_authentication.key_loader.raw"/>
+      <argument>RS256</argument>
+      <argument>3600</argument>
+      <argument>0</argument>
+      <argument>false</argument>
+    </service>
+    <service id="lexik_jwt_authentication.handler.authentication_success" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler">
+      <tag name="monolog.logger" channel="security"/>
+      <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="collection"/>
+      <argument>true</argument>
+    </service>
+    <service id="lexik_jwt_authentication.handler.authentication_failure" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler">
+      <tag name="monolog.logger" channel="security"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="service" id="translator.data_collector" on-invalid="null"/>
+    </service>
+    <service id="lexik_jwt_authentication.security.jwt_authenticator" class="Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator" abstract="true">
+      <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="service" id="lexik_jwt_authentication.extractor.chain_extractor"/>
+      <argument></argument>
+      <argument type="service" id="translator.data_collector" on-invalid="null"/>
+    </service>
+    <service id="lexik_jwt_authentication.extractor.chain_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\ChainTokenExtractor">
+      <argument type="collection">
+        <argument type="service" id="lexik_jwt_authentication.extractor.authorization_header_extractor"/>
+      </argument>
+    </service>
+    <service id="lexik_jwt_authentication.extractor.authorization_header_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor">
+      <argument>Bearer</argument>
+      <argument>Authorization</argument>
+    </service>
+    <service id="lexik_jwt_authentication.extractor.query_parameter_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\QueryParameterTokenExtractor">
+      <argument></argument>
+    </service>
+    <service id="lexik_jwt_authentication.extractor.cookie_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\CookieTokenExtractor">
+      <argument></argument>
+    </service>
+    <service id="lexik_jwt_authentication.extractor.split_cookie_extractor" class="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\SplitCookieExtractor">
+      <argument></argument>
+    </service>
+    <service id="lexik_jwt_authentication.security.jwt_user_provider" class="Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserProvider">
+      <argument></argument>
+    </service>
+    <service id="lexik_jwt_authentication.check_config_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\CheckConfigCommand">
+      <tag name="console.command" command="lexik:jwt:check-config"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="lexik_jwt_authentication.key_loader.raw"/>
+      <argument>RS256</argument>
+      <call method="setName">
+        <argument>lexik:jwt:check-config</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Checks that the bundle is properly configured.</argument>
+      </call>
+    </service>
+    <service id="lexik_jwt_authentication.migrate_config_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\MigrateConfigCommand">
+      <tag name="console.command" command="lexik:jwt:migrate-config"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="lexik_jwt_authentication.key_loader.raw"/>
+      <argument>%env(JWT_PASSPHRASE)%</argument>
+      <argument>RS256</argument>
+      <call method="setName">
+        <argument>lexik:jwt:migrate-config</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Migrate LexikJWTAuthenticationBundle configuration to the Web-Token one.</argument>
+      </call>
+    </service>
+    <service id="lexik_jwt_authentication.enable_encryption_config_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\EnableEncryptionConfigCommand">
+      <tag name="console.command" command="lexik:jwt:enable-encryption"/>
+      <tag name="container.no_preload"/>
+      <argument>null</argument>
+      <call method="setName">
+        <argument>lexik:jwt:enable-encryption</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Enable Web-Token encryption support.</argument>
+      </call>
+    </service>
+    <service id="lexik_jwt_authentication.generate_token_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\GenerateTokenCommand" public="true">
+      <tag name="console.command" command="lexik:jwt:generate-token"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="lexik_jwt_authentication.jwt_manager"/>
+      <argument type="iterator">
+        <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
+      </argument>
+      <call method="setName">
+        <argument>lexik:jwt:generate-token</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Generates a JWT token for a given user.</argument>
+      </call>
+    </service>
+    <service id="lexik_jwt_authentication.generate_keypair_command" class="Lexik\Bundle\JWTAuthenticationBundle\Command\GenerateKeyPairCommand">
+      <tag name="console.command" command="lexik:jwt:generate-keypair"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="filesystem"/>
+      <argument>%env(resolve:JWT_SECRET_KEY)%</argument>
+      <argument>%env(resolve:JWT_PUBLIC_KEY)%</argument>
+      <argument>%env(JWT_PASSPHRASE)%</argument>
+      <argument>RS256</argument>
+      <call method="setName">
+        <argument>lexik:jwt:generate-keypair</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Generate public/private keys for use in your application.</argument>
+      </call>
+    </service>
     <service id="annotated_app_entity_avis_api_platform_doctrine_orm_filter_search_filter" class="ApiPlatform\Doctrine\Orm\Filter\SearchFilter" autowire="true">
       <tag name="api_platform.filter"/>
       <argument type="service" id="doctrine"/>
@@ -8735,12 +9106,28 @@
       <argument type="service" id="api_platform.api.identifiers_extractor" on-invalid="ignore"/>
       <argument type="service" id="api_platform.hydra.name_converter.hydra_prefix" on-invalid="ignore"/>
     </service>
+    <service id="annotated_app_entity_voiture_api_platform_doctrine_orm_filter_search_filter" class="ApiPlatform\Doctrine\Orm\Filter\SearchFilter" autowire="true">
+      <tag name="api_platform.filter"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="service" id="api_platform.symfony.iri_converter"/>
+      <argument type="service" id="property_accessor"/>
+      <argument type="service" id="monolog.logger" on-invalid="ignore"/>
+      <argument type="collection">
+        <argument key="modele">partial</argument>
+        <argument key="marque">partial</argument>
+      </argument>
+      <argument type="service" id="api_platform.api.identifiers_extractor" on-invalid="ignore"/>
+      <argument type="service" id="api_platform.hydra.name_converter.hydra_prefix" on-invalid="ignore"/>
+    </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AccueilController" class="App\Controller\AccueilController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AccueilController" class="App\Controller\AccueilController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AccueilController" class="App\Controller\AccueilController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminController" class="App\Controller\AdminController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminController" class="App\Controller\AdminController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AdminController" class="App\Controller\AdminController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ApiRegistrationController" class="App\Controller\ApiRegistrationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ApiRegistrationController" class="App\Controller\ApiRegistrationController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ApiRegistrationController" class="App\Controller\ApiRegistrationController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AuthentificationController" class="App\Controller\AuthentificationController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AuthentificationController" class="App\Controller\AuthentificationController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AuthentificationController" class="App\Controller\AuthentificationController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -8762,14 +9149,22 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RechercheController" class="App\Controller\RechercheController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RechercheController" class="App\Controller\RechercheController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\RechercheController" class="App\Controller\RechercheController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\StatsController" class="App\Controller\StatsController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\StatsController" class="App\Controller\StatsController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\StatsController" class="App\Controller\StatsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\UserController" class="App\Controller\UserController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\UserController" class="App\Controller\UserController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\UserController" class="App\Controller\UserController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\VoitureController" class="App\Controller\VoitureController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\VoitureController" class="App\Controller\VoitureController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\VoitureController" class="App\Controller\VoitureController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\RegistrationType" class="App\Form\RegistrationType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\RegistrationType" class="App\Form\RegistrationType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AvisRepository" class="App\Repository\AvisRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\AvisRepository" class="App\Repository\AvisRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ConfigurationRepository" class="App\Repository\ConfigurationRepository" autowire="true" abstract="true"/>
@@ -8834,6 +9229,22 @@
         <argument type="collection">
           <argument type="service_closure" id="security.listener.session.main"/>
           <argument>onSuccessfulLogin</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="security.logout.listener.default.main"/>
+          <argument>onLogout</argument>
+        </argument>
+        <argument>64</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="security.logout.listener.session.main"/>
+          <argument>onLogout</argument>
         </argument>
         <argument>0</argument>
       </call>
@@ -9344,6 +9755,19 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.OzEre6h" method="withContext"/>
     </service>
+    <service id=".service_locator.2JsKP_J" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="passwordHasher" type="service_closure" id="security.user_password_hasher"/>
+        <argument key="userRepository" type="service_closure" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.2JsKP_J.App\Controller\ApiRegistrationController::apiRegister()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ApiRegistrationController::apiRegister()"/>
+      <argument>App\Controller\ApiRegistrationController::apiRegister()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.2JsKP_J" method="withContext"/>
+    </service>
     <service id=".service_locator.3QECKYg" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -9369,6 +9793,19 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.gcAlB65" method="withContext"/>
     </service>
+    <service id=".service_locator.uPrBHkx" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="avisRepository" type="service_closure" id="App\Repository\AvisRepository"/>
+        <argument key="covoiturageRepository" type="service_closure" id="App\Repository\CovoiturageRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.uPrBHkx.App\Controller\EmployeController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\EmployeController::index()"/>
+      <argument>App\Controller\EmployeController::index()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.uPrBHkx" method="withContext"/>
+    </service>
     <service id=".service_locator.i.fVVTo" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -9387,6 +9824,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.i.fVVTo" method="withContext"/>
     </service>
+    <service id=".service_locator.5FanY8e" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="user" type="service_closure" id=".errored..service_locator.5FanY8e.Symfony\Component\Security\Core\User\UserInterface"/>
+      </argument>
+    </service>
+    <service id=".service_locator.5FanY8e.App\Controller\ProfilController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ProfilController::index()"/>
+      <argument>App\Controller\ProfilController::index()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.5FanY8e" method="withContext"/>
+    </service>
     <service id=".service_locator.MEs4xNG" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -9399,7 +9848,42 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.MEs4xNG" method="withContext"/>
     </service>
-    <service id=".service_locator.pzAAJKB" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".errored.syF_FQm" class="Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface">
+      <tag name="container.error" message="Cannot determine controller argument for &quot;App\Controller\RegistrationController::register()&quot;: the $passwordEncoder argument is type-hinted with the non-existent class or interface: &quot;Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface&quot;."/>
+    </service>
+    <service id=".service_locator.BTkkvr3" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="passwordEncoder" type="service_closure" id=".errored.syF_FQm"/>
+      </argument>
+    </service>
+    <service id=".service_locator.IJqlBtP" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="passwordHasher" type="service_closure" id="security.user_password_hasher"/>
+        <argument key="userRepository" type="service_closure" id="App\Repository\UserRepository"/>
+        <argument key="validator" type="service_closure" id="debug.validator"/>
+      </argument>
+    </service>
+    <service id=".service_locator.IJqlBtP.App\Controller\UserController::register()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\UserController::register()"/>
+      <argument>App\Controller\UserController::register()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.IJqlBtP" method="withContext"/>
+    </service>
+    <service id=".service_locator.DEujfg9" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="voitureRepository" type="service_closure" id="App\Repository\VoitureRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.DEujfg9.App\Controller\VoitureController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\VoitureController::index()"/>
+      <argument>App\Controller\VoitureController::index()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.DEujfg9" method="withContext"/>
+    </service>
+    <service id=".service_locator.sPPZzPi" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.zHyJIs5.kernel::registerContainerConfiguration()"/>
@@ -9407,19 +9891,31 @@
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.zHyJIs5.kernel::loadRoutes()"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.zHyJIs5.kernel::loadRoutes()"/>
         <argument key="App\Controller\AdminController::index" type="service_closure" id=".service_locator.OzEre6h.App\Controller\AdminController::index()"/>
+        <argument key="App\Controller\ApiRegistrationController::apiRegister" type="service_closure" id=".service_locator.2JsKP_J.App\Controller\ApiRegistrationController::apiRegister()"/>
         <argument key="App\Controller\AuthentificationController::login" type="service_closure" id=".service_locator.3QECKYg.App\Controller\AuthentificationController::login()"/>
         <argument key="App\Controller\CovoiturageController::index" type="service_closure" id=".service_locator.gcAlB65.App\Controller\CovoiturageController::index()"/>
+        <argument key="App\Controller\EmployeController::index" type="service_closure" id=".service_locator.uPrBHkx.App\Controller\EmployeController::index()"/>
         <argument key="App\Controller\EmployeController::validerAvis" type="service_closure" id=".service_locator.i.fVVTo.App\Controller\EmployeController::validerAvis()"/>
         <argument key="App\Controller\EmployeController::refuserAvis" type="service_closure" id=".service_locator.i.fVVTo.App\Controller\EmployeController::refuserAvis()"/>
+        <argument key="App\Controller\ProfilController::index" type="service_closure" id=".service_locator.5FanY8e.App\Controller\ProfilController::index()"/>
         <argument key="App\Controller\RechercheController::recherche" type="service_closure" id=".service_locator.MEs4xNG.App\Controller\RechercheController::recherche()"/>
+        <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.BTkkvr3"/>
+        <argument key="App\Controller\UserController::register" type="service_closure" id=".service_locator.IJqlBtP.App\Controller\UserController::register()"/>
+        <argument key="App\Controller\VoitureController::index" type="service_closure" id=".service_locator.DEujfg9.App\Controller\VoitureController::index()"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.zHyJIs5.kernel::registerContainerConfiguration()"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.zHyJIs5.kernel::loadRoutes()"/>
         <argument key="App\Controller\AdminController:index" type="service_closure" id=".service_locator.OzEre6h.App\Controller\AdminController::index()"/>
+        <argument key="App\Controller\ApiRegistrationController:apiRegister" type="service_closure" id=".service_locator.2JsKP_J.App\Controller\ApiRegistrationController::apiRegister()"/>
         <argument key="App\Controller\AuthentificationController:login" type="service_closure" id=".service_locator.3QECKYg.App\Controller\AuthentificationController::login()"/>
         <argument key="App\Controller\CovoiturageController:index" type="service_closure" id=".service_locator.gcAlB65.App\Controller\CovoiturageController::index()"/>
+        <argument key="App\Controller\EmployeController:index" type="service_closure" id=".service_locator.uPrBHkx.App\Controller\EmployeController::index()"/>
         <argument key="App\Controller\EmployeController:validerAvis" type="service_closure" id=".service_locator.i.fVVTo.App\Controller\EmployeController::validerAvis()"/>
         <argument key="App\Controller\EmployeController:refuserAvis" type="service_closure" id=".service_locator.i.fVVTo.App\Controller\EmployeController::refuserAvis()"/>
+        <argument key="App\Controller\ProfilController:index" type="service_closure" id=".service_locator.5FanY8e.App\Controller\ProfilController::index()"/>
         <argument key="App\Controller\RechercheController:recherche" type="service_closure" id=".service_locator.MEs4xNG.App\Controller\RechercheController::recherche()"/>
+        <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.BTkkvr3"/>
+        <argument key="App\Controller\UserController:register" type="service_closure" id=".service_locator.IJqlBtP.App\Controller\UserController::register()"/>
+        <argument key="App\Controller\VoitureController:index" type="service_closure" id=".service_locator.DEujfg9.App\Controller\VoitureController::index()"/>
       </argument>
     </service>
     <service id=".service_locator.ea.H0ae" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9697,9 +10193,10 @@
       <argument type="service" id="argument_resolver.query_parameter_value_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.9QYCuGc" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator._Y1FsFN" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Form\RegistrationType" type="service_closure" id="App\Form\RegistrationType"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="service_closure" id="form.type.form"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\ChoiceType" type="service_closure" id="form.type.choice"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FileType" type="service_closure" id="form.type.file"/>
@@ -10106,6 +10603,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.ZyP9f7K" method="withContext"/>
     </service>
+    <service id=".service_locator.ZyP9f7K.App\Controller\ApiRegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ApiRegistrationController"/>
+      <argument>App\Controller\ApiRegistrationController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.ZyP9f7K" method="withContext"/>
+    </service>
     <service id=".service_locator.ZyP9f7K.App\Controller\AuthentificationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\AuthentificationController"/>
       <argument>App\Controller\AuthentificationController</argument>
@@ -10148,9 +10651,21 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.ZyP9f7K" method="withContext"/>
     </service>
+    <service id=".service_locator.ZyP9f7K.App\Controller\RegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RegistrationController"/>
+      <argument>App\Controller\RegistrationController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.ZyP9f7K" method="withContext"/>
+    </service>
     <service id=".service_locator.ZyP9f7K.App\Controller\StatsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\StatsController"/>
       <argument>App\Controller\StatsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.ZyP9f7K" method="withContext"/>
+    </service>
+    <service id=".service_locator.ZyP9f7K.App\Controller\UserController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\UserController"/>
+      <argument>App\Controller\UserController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.ZyP9f7K" method="withContext"/>
     </service>
@@ -10388,6 +10903,7 @@
           <argument>App\Kernel</argument>
           <argument>App\Controller\AccueilController</argument>
           <argument>App\Controller\AdminController</argument>
+          <argument>App\Controller\ApiRegistrationController</argument>
           <argument>App\Controller\AuthentificationController</argument>
           <argument>App\Controller\AvisController</argument>
           <argument>App\Controller\CovoiturageController</argument>
@@ -10395,7 +10911,9 @@
           <argument>App\Controller\ProfilController</argument>
           <argument>App\Controller\PropositionController</argument>
           <argument>App\Controller\RechercheController</argument>
+          <argument>App\Controller\RegistrationController</argument>
           <argument>App\Controller\StatsController</argument>
+          <argument>App\Controller\UserController</argument>
           <argument>App\Controller\VoitureController</argument>
           <argument>Doctrine\Bundle\DoctrineBundle\Controller\ProfilerController</argument>
         </argument>
@@ -10796,6 +11314,9 @@
     </service>
     <service id=".errored..service_locator.i.fVVTo.App\Entity\Avis" class="App\Entity\Avis">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.i.fVVTo&quot;: it needs an instance of &quot;App\Entity\Avis&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    </service>
+    <service id=".errored..service_locator.5FanY8e.Symfony\Component\Security\Core\User\UserInterface" class="Symfony\Component\Security\Core\User\UserInterface">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.5FanY8e&quot;: it references interface &quot;Symfony\Component\Security\Core\User\UserInterface&quot; but no such service exists. Did you create an instantiable class that implements this interface?"/>
     </service>
     <service id=".console.command.about.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>about</argument>
@@ -11294,6 +11815,41 @@
       <argument>false</argument>
       <argument type="service_closure" id="security.command.user_password_hash"/>
     </service>
+    <service id=".lexik_jwt_authentication.check_config_command.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>lexik:jwt:check-config</argument>
+      <argument type="collection"/>
+      <argument>Checks that the bundle is properly configured.</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="lexik_jwt_authentication.check_config_command"/>
+    </service>
+    <service id=".lexik_jwt_authentication.migrate_config_command.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>lexik:jwt:migrate-config</argument>
+      <argument type="collection"/>
+      <argument>Migrate LexikJWTAuthenticationBundle configuration to the Web-Token one.</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="lexik_jwt_authentication.migrate_config_command"/>
+    </service>
+    <service id=".lexik_jwt_authentication.enable_encryption_config_command.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>lexik:jwt:enable-encryption</argument>
+      <argument type="collection"/>
+      <argument>Enable Web-Token encryption support.</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="lexik_jwt_authentication.enable_encryption_config_command"/>
+    </service>
+    <service id=".lexik_jwt_authentication.generate_token_command.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>lexik:jwt:generate-token</argument>
+      <argument type="collection"/>
+      <argument>Generates a JWT token for a given user.</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="lexik_jwt_authentication.generate_token_command"/>
+    </service>
+    <service id=".lexik_jwt_authentication.generate_keypair_command.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>lexik:jwt:generate-keypair</argument>
+      <argument type="collection"/>
+      <argument>Generate public/private keys for use in your application.</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="lexik_jwt_authentication.generate_keypair_command"/>
+    </service>
     <service id=".maker.auto_command.make_auth.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>make:auth</argument>
       <argument type="collection"/>
@@ -11504,7 +12060,7 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.oPMV9xi"/>
+      <argument type="service" id=".service_locator.S8_NW1I"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -11597,6 +12153,11 @@
         <argument key="api:openapi:export">api_platform.openapi.command</argument>
         <argument key="debug:api-resource">debug.api_platform.debug_resource.command</argument>
         <argument key="doctrine:fixtures:load">doctrine.fixtures_load_command</argument>
+        <argument key="lexik:jwt:check-config">lexik_jwt_authentication.check_config_command</argument>
+        <argument key="lexik:jwt:migrate-config">lexik_jwt_authentication.migrate_config_command</argument>
+        <argument key="lexik:jwt:enable-encryption">lexik_jwt_authentication.enable_encryption_config_command</argument>
+        <argument key="lexik:jwt:generate-token">lexik_jwt_authentication.generate_token_command</argument>
+        <argument key="lexik:jwt:generate-keypair">lexik_jwt_authentication.generate_keypair_command</argument>
         <argument key="make:auth">maker.auto_command.make_auth</argument>
         <argument key="make:command">maker.auto_command.make_command</argument>
         <argument key="make:twig-component">maker.auto_command.make_twig_component</argument>
@@ -11631,7 +12192,7 @@
         <argument key="make:state-provider">maker.auto_command.make_state_provider</argument>
       </argument>
     </service>
-    <service id=".service_locator.oPMV9xi" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.S8_NW1I" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
@@ -11725,6 +12286,11 @@
         <argument key="api_platform.openapi.command" type="service_closure" id="api_platform.openapi.command"/>
         <argument key="debug.api_platform.debug_resource.command" type="service_closure" id="debug.api_platform.debug_resource.command"/>
         <argument key="doctrine.fixtures_load_command" type="service_closure" id="doctrine.fixtures_load_command"/>
+        <argument key="lexik_jwt_authentication.check_config_command" type="service_closure" id=".lexik_jwt_authentication.check_config_command.lazy"/>
+        <argument key="lexik_jwt_authentication.migrate_config_command" type="service_closure" id=".lexik_jwt_authentication.migrate_config_command.lazy"/>
+        <argument key="lexik_jwt_authentication.enable_encryption_config_command" type="service_closure" id=".lexik_jwt_authentication.enable_encryption_config_command.lazy"/>
+        <argument key="lexik_jwt_authentication.generate_token_command" type="service_closure" id=".lexik_jwt_authentication.generate_token_command.lazy"/>
+        <argument key="lexik_jwt_authentication.generate_keypair_command" type="service_closure" id=".lexik_jwt_authentication.generate_keypair_command.lazy"/>
         <argument key="maker.auto_command.make_auth" type="service_closure" id=".maker.auto_command.make_auth.lazy"/>
         <argument key="maker.auto_command.make_command" type="service_closure" id=".maker.auto_command.make_command.lazy"/>
         <argument key="maker.auto_command.make_twig_component" type="service_closure" id=".maker.auto_command.make_twig_component.lazy"/>
@@ -12123,10 +12689,18 @@
     <service id="api_platform.message_bus" alias="debug.traced.messenger.bus.default"/>
     <service id="api_platform.security.expression_language" alias="security.expression_language"/>
     <service id="ApiPlatform\Symfony\Security\ResourceAccessCheckerInterface" alias="api_platform.security.resource_access_checker"/>
+    <service id="Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface" alias="lexik_jwt_authentication.jwt_manager"/>
+    <service id="Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface" alias="lexik_jwt_authentication.jws_provider.lcobucci"/>
+    <service id="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler" alias="lexik_jwt_authentication.handler.authentication_success"/>
+    <service id="Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler" alias="lexik_jwt_authentication.handler.authentication_failure"/>
+    <service id="Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface" alias="lexik_jwt_authentication.extractor.chain_extractor"/>
+    <service id="lexik_jwt_authentication.encoder" alias="lexik_jwt_authentication.encoder.lcobucci" public="true"/>
+    <service id="Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface" alias="lexik_jwt_authentication.encoder.lcobucci"/>
+    <service id="lexik_jwt_authentication.key_loader" alias="lexik_jwt_authentication.key_loader.raw" public="true"/>
     <service id="security.token_storage" alias="security.untracked_token_storage" public="true"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.pRu6x_4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.pzAAJKB"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.sPPZzPi"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.BxSdgVt"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -12151,7 +12725,7 @@
     <service id=".service_locator.xqODiDp" alias="messenger.receiver_locator"/>
     <service id=".service_locator.kVuTj7R" alias="messenger.retry_strategy_locator"/>
     <service id=".service_locator.9LJrHhf" alias="api_platform.serializer_locator"/>
-    <service id=".service_locator.tCMl1Qh" alias="api_platform.filter_locator"/>
+    <service id=".service_locator.0JbJXnC" alias="api_platform.filter_locator"/>
     <service id=".service_locator.hUPzsWO" alias=".service_locator.ea.H0ae"/>
     <service id="api_platform.metadata.resource.metadata_collection_factory.parameter.inner" alias="api_platform.metadata.resource.metadata_collection_factory.attributes"/>
     <service id="api_platform.validator.metadata.resource.metadata_collection_factory.parameter.inner" alias="api_platform.metadata.resource.metadata_collection_factory.parameter"/>
@@ -12238,10 +12812,15 @@
     <service id="api_platform.metadata.resource.metadata_collection_factory.cached.inner" alias="api_platform.doctrine.orm.metadata.resource.metadata_collection_factory"/>
     <service id=".service_locator.n_ENPtW" alias=".service_locator.zHyJIs5"/>
     <service id=".service_locator.hNMhKaf" alias=".service_locator.OzEre6h"/>
+    <service id=".service_locator.QOGsrBr" alias=".service_locator.2JsKP_J"/>
     <service id=".service_locator.Nrz07Zz" alias=".service_locator.3QECKYg"/>
     <service id=".service_locator.VOdlOa_" alias=".service_locator.gcAlB65"/>
+    <service id=".service_locator.PZwLcGP" alias=".service_locator.uPrBHkx"/>
     <service id=".service_locator.uozl2iU" alias=".service_locator.i.fVVTo"/>
+    <service id=".service_locator.iYcWkcr" alias=".service_locator.5FanY8e"/>
     <service id=".service_locator.h5CdKCi" alias=".service_locator.MEs4xNG"/>
+    <service id=".service_locator.zs7Csht" alias=".service_locator.IJqlBtP"/>
+    <service id=".service_locator.UyPHA3Y" alias=".service_locator.DEujfg9"/>
     <service id=".service_locator.9nvaCmp" alias=".service_locator.ZyP9f7K"/>
   </services>
 </container>

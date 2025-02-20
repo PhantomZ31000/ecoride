@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import './GestionComptes.css';
 
 function GestionComptes() {
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     // Récupérer la liste des utilisateurs depuis l'API
     fetch('http://127.0.0.1:8000/api/users') // Remplacez par l'URL correcte de votre API
-    .then(response => response.json())
-    .then(data => setUsers(data));
-  },);
+      .then(response => response.json())
+      .then(data => setUsers(data));
+  }, []);
 
   const handleSuspendreCompte = async (userId) => {
     try {
@@ -24,7 +24,7 @@ function GestionComptes() {
       if (response.ok) {
         // Mettre à jour la liste des utilisateurs
         setUsers(users.map(user =>
-          user.id === userId? {...user, enabled: false }: user
+          user.id === userId ? { ...user, enabled: false } : user
         ));
       } else {
         // Afficher un message d'erreur
@@ -38,7 +38,29 @@ function GestionComptes() {
   };
 
   const handleActiverCompte = async (userId) => {
-    // Même logique que handleSuspendreCompte, mais avec enabled: true
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ enabled: true }), // Mettez à jour le statut du compte
+      });
+
+      if (response.ok) {
+        // Mettre à jour la liste des utilisateurs
+        setUsers(users.map(user =>
+          user.id === userId ? { ...user, enabled: true } : user
+        ));
+      } else {
+        // Afficher un message d'erreur
+        const data = await response.json();
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'activation du compte:', error);
+      alert('Une erreur est survenue lors de l\'activation du compte.');
+    }
   };
 
   return (
@@ -62,11 +84,11 @@ function GestionComptes() {
               <td>{user.pseudo}</td>
               <td>{user.email}</td>
               <td>{user.roles.join(', ')}</td>
-              <td>{user.enabled? 'Actif': 'Suspendu'}</td>
+              <td>{user.enabled ? 'Actif' : 'Suspendu'}</td>
               <td>
-                {user.enabled? (
+                {user.enabled ? (
                   <button onClick={() => handleSuspendreCompte(user.id)}>Suspendre</button>
-                ): (
+                ) : (
                   <button onClick={() => handleActiverCompte(user.id)}>Activer</button>
                 )}
               </td>

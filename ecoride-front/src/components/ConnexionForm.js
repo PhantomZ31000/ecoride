@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';  // Utilisation de useNavigate pour la redirection
 import './ConnexionForm.css';
 
 function ConnexionForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);  // Ajout d'un état pour gérer le chargement
+    const navigate = useNavigate();  // Pour la redirection après connexion réussie
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(null); // Réinitialise l'erreur
+        setError(null);  // Réinitialise l'erreur
+        setIsLoading(true);  // Démarre le chargement
 
         try {
             const response = await fetch('http://127.0.0.1:8000/api/login', {
@@ -22,20 +26,26 @@ function ConnexionForm() {
 
             if (response.ok) {
                 // Rediriger l'utilisateur vers la page d'accueil après la connexion
-                window.location.href = '/';
+                navigate('/');
             } else {
-                const data = await response.json();
-                setError(data.message || 'Erreur lors de la connexion.');
+                if (response.status === 401) {
+                    setError('Identifiants incorrects.');  // Affichage d'un message d'erreur spécifique
+                } else {
+                    const data = await response.json();
+                    setError(data.message || 'Erreur lors de la connexion.');
+                }
             }
         } catch (error) {
             console.error('Erreur lors de la connexion:', error);
             setError('Une erreur est survenue lors de la connexion.');
         }
+
+        setIsLoading(false);  // Arrête le chargement
     };
 
     return (
-        <Form onSubmit={handleSubmit} className="connexion-form"> {/* Ajout d'une classe pour le style */}
-            {error && <Alert variant="danger">{error}</Alert>} {/* Affichage de l'erreur */}
+        <Form onSubmit={handleSubmit} className="connexion-form">
+            {error && <Alert variant="danger">{error}</Alert>}  {/* Affichage de l'erreur */}
 
             <Form.Group controlId="email">
                 <Form.Label>Adresse email:</Form.Label>
@@ -59,8 +69,8 @@ function ConnexionForm() {
                 />
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="mt-3">
-                Connexion
+            <Button variant="primary" type="submit" className="mt-3" disabled={isLoading}>
+                {isLoading ? 'Chargement...' : 'Connexion'}  {/* Affichage du texte de bouton en fonction de l'état */}
             </Button>
         </Form>
     );

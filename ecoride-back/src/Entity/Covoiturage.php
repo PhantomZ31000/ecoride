@@ -29,30 +29,26 @@ use ApiPlatform\Core\Annotation\ApiFilter;
             normalizationContext: ['groups' => ['covoiturage:item']],
             security: "is_granted('ROLE_ADMIN')"
         ),
+        new Post(
+            denormalizationContext: ['groups' => ['covoiturage:create']],
+            normalizationContext: ['groups' => ['covoiturage:item']],
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Put(
+            denormalizationContext: ['groups' => ['covoiturage:update']],
+            security: "is_granted('ROLE_ADMIN')"
+        ),
+        new Delete(
+            security: "is_granted('ROLE_ADMIN')"
+        ),
         new GetCollection(
             normalizationContext: ['groups' => ['covoiturage:list']],
             paginationItemsPerPage: 10,
-            paginationMaximumItemsPerPage: 50,
+            paginationMaximumItemsPerPage: 50
         ),
         new Get(
             normalizationContext: ['groups' => ['covoiturage:item']]
-        ),
-        new Post(
-            denormalizationContext: ['groups' => ['covoiturage:create']],
-            normalizationContext: ['groups' => ['covoiturage:item']]
-        ),
-        new Put(
-            denormalizationContext: ['groups' => ['covoiturage:update']]
-        ),
-        new GetCollection(
-            normalizationContext: ['groups' => ['covoiturage:list']],
-            security: "is_granted('ROLE_EMPLOYE')"
-        ),
-        new Get(
-            normalizationContext: ['groups' => ['covoiturage:item']],
-            security: "is_granted('ROLE_EMPLOYE')"
-        ),
-        new Delete()
+        )
     ],
     filters: [SearchFilter::class, RangeFilter::class],
 )]
@@ -94,7 +90,7 @@ class Covoiturage
     #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
     private ?User $conducteur = null;
 
-    #[ORM\ManyToOne(inversedBy: 'covoituragesVoiture')]
+    #[ORM\ManyToOne(inversedBy: 'covoiturages')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['covoiturage:list', 'covoiturage:item', 'covoiturage:create', 'covoiturage:update'])]
     private ?Voiture $voiture = null;

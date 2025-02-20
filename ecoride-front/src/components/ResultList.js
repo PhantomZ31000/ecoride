@@ -8,6 +8,10 @@ function ResultList({ covoiturages }) {
     return <div>Chargement...</div>;
   }
 
+  if (covoiturages.length === 0) {
+    return <div>Aucun covoiturage trouvé.</div>; // Message en cas d'absence de covoiturages
+  }
+
   return (
     <Row>
       {covoiturages.map((covoiturage) => (

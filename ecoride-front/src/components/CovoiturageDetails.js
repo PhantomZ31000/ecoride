@@ -1,19 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Image } from 'react-bootstrap';
+import { Container, Row, Col, Image, Alert } from 'react-bootstrap';
 import './CovoiturageDetails.css';
 
 function CovoiturageDetails({ covoiturageId }) {
   const [covoiturage, setCovoiturage] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Récupérer les informations du covoiturage depuis l'API
-    fetch(`http://127.0.0.1:8000/api/covoiturages/${covoiturageId}`)
-    .then(response => response.json())
-    .then(data => setCovoiturage(data));
+    const fetchCovoiturage = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/covoiturages/${covoiturageId}`);
+        
+        if (!response.ok) {
+          throw new Error('Impossible de récupérer les données du covoiturage');
+        }
+
+        const data = await response.json();
+        setCovoiturage(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCovoiturage();
   }, [covoiturageId]);
 
-  if (!covoiturage) {
+  if (isLoading) {
     return <div>Chargement...</div>;
+  }
+
+  if (error) {
+    return <Alert variant="danger">{error}</Alert>;
   }
 
   return (

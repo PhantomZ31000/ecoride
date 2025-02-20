@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import './ConnexionModal.css';
 
 function ConnexionModal({ show, handleClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);  // Ajout de l'état pour le chargement
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(null);  // Réinitialise les erreurs
+    setIsLoading(true);  // Démarre le chargement
 
     try {
       const response = await fetch('http://127.0.0.1:8000/api/login', {
@@ -22,14 +26,15 @@ function ConnexionModal({ show, handleClose }) {
         // Rediriger l'utilisateur vers la page d'accueil après la connexion
         window.location.href = '/';
       } else {
-        // Afficher un message d'erreur
         const data = await response.json();
-        alert(data.message);
+        setError(data.message || 'Erreur lors de la connexion.');
       }
     } catch (error) {
       console.error('Erreur lors de la connexion:', error);
-      alert('Une erreur est survenue lors de la connexion.');
+      setError('Une erreur est survenue lors de la connexion.');
     }
+
+    setIsLoading(false);  // Arrête le chargement
   };
 
   return (
@@ -39,6 +44,8 @@ function ConnexionModal({ show, handleClose }) {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
+          {error && <Alert variant="danger">{error}</Alert>}  {/* Affichage de l'erreur */}
+
           <Form.Group controlId="email">
             <Form.Label>Adresse email:</Form.Label>
             <Form.Control
@@ -46,8 +53,10 @@ function ConnexionModal({ show, handleClose }) {
               placeholder="Entrez votre adresse email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </Form.Group>
+
           <Form.Group controlId="password">
             <Form.Label>Mot de passe:</Form.Label>
             <Form.Control
@@ -55,10 +64,12 @@ function ConnexionModal({ show, handleClose }) {
               placeholder="Entrez votre mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </Form.Group>
-          <Button variant="primary" type="submit">
-            Connexion
+
+          <Button variant="primary" type="submit" disabled={isLoading} className="mt-3">
+            {isLoading ? 'Chargement...' : 'Connexion'}
           </Button>
         </Form>
       </Modal.Body>

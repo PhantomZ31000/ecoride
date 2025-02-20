@@ -16,28 +16,33 @@ class ParametreRepository extends ServiceEntityRepository
         parent::__construct($registry, Parametre::class);
     }
 
-    //    /**
-    //     * @return Parametre[] Returns an array of Parametre objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Trouve un paramètre par son nom
+     *
+     * @param string $name
+     * @return Parametre[] Retourne un tableau de Parametre
+     */
+    public function findByName(string $name): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.name LIKE :name') // Assurez-vous que le champ "name" existe dans votre entité
+            ->setParameter('name', '%' . $name . '%')
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Parametre
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Trouve un Parametre par son ID
+     *
+     * @param int $id
+     * @return Parametre|null Retourne un Parametre ou null
+     */
+    public function findById(int $id): ?Parametre
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

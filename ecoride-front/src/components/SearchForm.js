@@ -8,9 +8,18 @@ function SearchForm() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Envoyer la requête de recherche à l'API
+        // Logique d'appel API de recherche
         console.log("Recherche de :", depart, "à", arrivee);
-        // ... votre logique d'appel API ici ...
+        // Votre logique d'appel API ici
+        fetch(`http://127.0.0.1:8000/api/covoiturages?depart=${depart}&arrivee=${arrivee}`)
+            .then(response => response.json())
+            .then(data => {
+                // Traiter les résultats ici
+                console.log(data);
+            })
+            .catch(error => {
+                console.error("Erreur lors de la recherche:", error);
+            });
     };
 
     return (

@@ -6,7 +6,7 @@ function HowItWorks() {
   return (
     <section className="how-it-works py-5">
       <Container>
-        <h2>Comment ça marche?</h2>
+        <h2>Comment ça marche ?</h2>
         <Row>
           <Col md={4}>
             <div className="step">

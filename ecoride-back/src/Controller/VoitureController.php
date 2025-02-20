@@ -2,19 +2,21 @@
 
 namespace App\Controller;
 
+use App\Repository\VoitureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class VoitureController extends AbstractController
 {
     #[Route('/voiture', name: 'app_voiture')]
-    public function index(): Response
+    public function index(VoitureRepository $voitureRepository): JsonResponse
     {
-        // Logique pour récupérer les voitures de l'utilisateur
-        
+        // Fetching all voitures for the user
+        $voitures = $voitureRepository->findAll();
 
-        return $this->render('voiture/index.html.twig', [
+        // Returning the list of voitures as JSON
+        return $this->json([
             'voitures' => $voitures,
         ]);
     }

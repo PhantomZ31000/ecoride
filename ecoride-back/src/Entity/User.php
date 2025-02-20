@@ -3,21 +3,23 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Delete;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherInterface;  
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -25,29 +27,24 @@ use ApiPlatform\Metadata\ApiFilter;
 #[ApiResource(
     operations: [
         new GetCollection(
-            normalizationContext: ['groups' => ['user:list']]
-        ),
-        new Get(
-            normalizationContext: ['groups' => ['user:item']]
-        ),
-        new Post(
-            denormalizationContext: ['groups' => ['user:create']],
-            normalizationContext: ['groups' => ['user:item']]
-        ),
-        new GetCollection(
             normalizationContext: ['groups' => ['user:list']],
-            security: "is_granted('ROLE_ADMIN')"
+            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
         ),
         new Get(
             normalizationContext: ['groups' => ['user:item']],
-            security: "is_granted('ROLE_ADMIN')"
+            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
+        ),
+        new Post(
+            denormalizationContext: ['groups' => ['user:create']],
+            normalizationContext: ['groups' => ['user:item']],
+            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
         ),
         new Put(
             denormalizationContext: ['groups' => ['user:update']],
-            security: "is_granted('ROLE_ADMIN')"
+            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
         ),
         new Delete(
-            security: "is_granted('ROLE_ADMIN')"
+            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
         )
     ],
     filters: [SearchFilter::class],
@@ -58,6 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user:list', 'user:item'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
@@ -67,9 +65,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column(type: 'string')]
     private ?string $password = null;
 
@@ -143,24 +138,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles = 'ROLE_USER';
-
-        // Add other roles based on user's role
-        if ($this->getRole() === 'employe') {
-            $roles = 'ROLE_EMPLOYE';
-        }   elseif ($this->getRole() === 'conducteur') {
-            $roles = 'ROLE_CONDUCTEUR';
-        }   elseif ($this->getRole() === 'passager') {
-            $roles = 'ROLE_PASSAGER';
-        }   elseif ($this->getRole() === 'admin') {
-            $roles = 'ROLE_ADMIN';
+        if ($this->getRole() === 'conducteur') {
+            $roles[] = 'ROLE_CONDUCTEUR';
+        } elseif ($this->getRole() === 'passager') {
+            $roles[] = 'ROLE_PASSAGER';
+        } elseif ($this->getRole() === 'les_deux') {
+            $roles[] = 'ROLE_CONDUCTEUR';
+            $roles[] = 'ROLE_PASSAGER';
+        } elseif ($this->getRole() === 'admin') {
+            $roles[] = 'ROLE_ADMIN';
         }
-
         return array_unique($roles);
     }
-
-
 
     public function setRoles(array $roles): self
     {
@@ -181,7 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Efface les données sensibles temporaires si nécessaire
+        // Effacer les données sensibles si nécessaire
     }
 
     public function getPseudo(): ?string

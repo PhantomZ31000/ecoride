@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RechercheController extends AbstractController
 {
-    #[Route('/recherche', name: 'app_recherche')]
+    #[Route('/api/recherche', name: 'app_recherche', methods: ['GET'])]
     public function recherche(Request $request, CovoiturageRepository $covoiturageRepository): JsonResponse
     {
         $depart = $request->query->get('depart');
@@ -20,8 +20,21 @@ class RechercheController extends AbstractController
         // Searching covoiturages based on the provided criteria
         $covoiturages = $covoiturageRepository->findByCriteria($depart, $arrivee, $date);
 
+        // Serialize the data to make it JSON-friendly
+        $data = [];
+        foreach ($covoiturages as $covoiturage) {
+            $data[] = [
+                'id' => $covoiturage->getId(),
+                'lieu_depart' => $covoiturage->getLieuDepart(),
+                'lieu_arrivee' => $covoiturage->getLieuArrivee(),
+                'date_depart' => $covoiturage->getDateDepart()->format('Y-m-d'),
+                'prix' => $covoiturage->getPrix(),
+                'nombre_places_disponibles' => $covoiturage->getNombrePlacesDisponibles(),
+            ];
+        }
+
         return $this->json([
-            'covoiturages' => $covoiturages,
+            'covoiturages' => $data,
         ]);
     }
 }

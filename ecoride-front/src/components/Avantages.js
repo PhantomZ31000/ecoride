@@ -10,7 +10,7 @@ function Avantages() {
         <Row>
           <Col md={4}>
             <div className="avantage">
-              <Image src="./images/saves.jpg" alt="Économique" fluid />
+              <Image src="/images/saves.jpg" alt="Économique" fluid />
               <h3>Économique</h3>
               <p>
                 Économisez sur vos frais de déplacement en partageant les

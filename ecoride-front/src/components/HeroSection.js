@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import SearchForm from './SearchForm';
+import SearchForm from './SearchForm'; // Le formulaire de recherche
 import './HeroSection.css'; // Importez le fichier CSS
 
 function HeroSection() {
@@ -19,7 +19,7 @@ function HeroSection() {
             </Button>
           </Col>
           <Col md={6}>
-            <SearchForm />
+            <SearchForm /> {/* Formulaire de recherche ici */}
           </Col>
         </Row>
       </Container>

@@ -20,22 +20,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(
-            normalizationContext: ['groups' => ['avis:list']]
-        ),
-        new Get(
-            normalizationContext: ['groups' => ['avis:item']]
-        ),
-        new Post(
-            denormalizationContext: ['groups' => ['avis:create']],
-            normalizationContext: ['groups' => ['avis:item']]
-        ),
-        new GetCollection(
             normalizationContext: ['groups' => ['avis:list']],
             security: "is_granted('ROLE_EMPLOYE')"
         ),
         new Get(
             normalizationContext: ['groups' => ['avis:item']],
-            security: "is_granted('ROLE_EMPLOYE')"
+            security: "is_granted('ROLE_USER')"
+        ),
+        new Post(
+            denormalizationContext: ['groups' => ['avis:create']],
+            normalizationContext: ['groups' => ['avis:item']],
+            security: "is_granted('ROLE_USER')"
         ),
         new Put(
             denormalizationContext: ['groups' => ['avis:update']],

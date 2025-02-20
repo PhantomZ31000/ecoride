@@ -11,7 +11,7 @@ function Connexion() {
     <h1>Connexion</h1>
     <ConnexionForm /> 
   </Container> 
-
+  <Footer />
 </div>
   );
 }

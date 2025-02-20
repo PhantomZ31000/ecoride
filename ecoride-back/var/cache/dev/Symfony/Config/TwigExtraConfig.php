@@ -9,6 +9,7 @@ require_once __DIR__.\DIRECTORY_SEPARATOR.'TwigExtra'.\DIRECTORY_SEPARATOR.'Intl
 require_once __DIR__.\DIRECTORY_SEPARATOR.'TwigExtra'.\DIRECTORY_SEPARATOR.'CssinlinerConfig.php';
 require_once __DIR__.\DIRECTORY_SEPARATOR.'TwigExtra'.\DIRECTORY_SEPARATOR.'InkyConfig.php';
 require_once __DIR__.\DIRECTORY_SEPARATOR.'TwigExtra'.\DIRECTORY_SEPARATOR.'StringConfig.php';
+require_once __DIR__.\DIRECTORY_SEPARATOR.'TwigExtra'.\DIRECTORY_SEPARATOR.'CommonmarkConfig.php';
 
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
@@ -24,6 +25,7 @@ class TwigExtraConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
     private $cssinliner;
     private $inky;
     private $string;
+    private $commonmark;
     private $_usedProperties = [];
     
     /**
@@ -208,6 +210,18 @@ class TwigExtraConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
         return $this->string;
     }
     
+    public function commonmark(array $value = []): \Symfony\Config\TwigExtra\CommonmarkConfig
+    {
+        if (null === $this->commonmark) {
+            $this->_usedProperties['commonmark'] = true;
+            $this->commonmark = new \Symfony\Config\TwigExtra\CommonmarkConfig($value);
+        } elseif (0 < \func_num_args()) {
+            throw new InvalidConfigurationException('The node created by "commonmark()" has already been initialized. You cannot pass values the second time you call commonmark().');
+        }
+    
+        return $this->commonmark;
+    }
+    
     public function getExtensionAlias(): string
     {
         return 'twig_extra';
@@ -257,6 +271,12 @@ class TwigExtraConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
             unset($value['string']);
         }
     
+        if (array_key_exists('commonmark', $value)) {
+            $this->_usedProperties['commonmark'] = true;
+            $this->commonmark = new \Symfony\Config\TwigExtra\CommonmarkConfig($value['commonmark']);
+            unset($value['commonmark']);
+        }
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
@@ -285,6 +305,9 @@ class TwigExtraConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
         }
         if (isset($this->_usedProperties['string'])) {
             $output['string'] = $this->string instanceof \Symfony\Config\TwigExtra\StringConfig ? $this->string->toArray() : $this->string;
+        }
+        if (isset($this->_usedProperties['commonmark'])) {
+            $output['commonmark'] = $this->commonmark->toArray();
         }
     
         return $output;

@@ -11,7 +11,8 @@ function InscriptionModal({ show, handleClose }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (password!== confirmPassword) {
+    // Validation des mots de passe
+    if (password !== confirmPassword) {
       alert('Les mots de passe ne correspondent pas.');
       return;
     }

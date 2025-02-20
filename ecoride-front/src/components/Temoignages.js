@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import './Temoignages.css';
+import './Temoignages.css'; // Fichier CSS
 
 function Temoignages() {
   return (

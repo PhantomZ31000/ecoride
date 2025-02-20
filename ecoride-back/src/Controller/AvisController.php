@@ -3,20 +3,28 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AvisController extends AbstractController
 {
-    #[Route('/avis', name: 'app_avis')]
-    public function index(Request $request): Response
+    #[Route('/api/avis', name: 'app_avis', methods: ['POST'])]
+    public function index(Request $request): JsonResponse
     {
-        // Logique pour gérer la soumission du formulaire d'avis
-        
+        // Récupérer les données du formulaire (ici, via JSON dans le corps de la requête)
+        $data = json_decode($request->getContent(), true);
 
-        return $this->render('avis/index.html.twig', [
-            
-        ]);
+        // Logique pour valider et traiter l'avis
+        // Par exemple, tu peux valider les données et les enregistrer dans la base de données
+
+        // Exemple de traitement de l'avis
+        $avisData = [
+            'message' => 'Avis soumis avec succès',
+            'avis' => $data,  // Le contenu de l'avis soumis
+        ];
+
+        // Retourner une réponse JSON avec un message de succès
+        return $this->json($avisData);
     }
 }

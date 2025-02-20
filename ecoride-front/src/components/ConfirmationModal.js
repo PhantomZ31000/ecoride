@@ -1,8 +1,8 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Spinner } from 'react-bootstrap';
 import './ConfirmationModal.css';
 
-function ConfirmationModal({ show, handleClose, message, onConfirm }) {
+function ConfirmationModal({ show, handleClose, message, onConfirm, isLoading }) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -13,8 +13,16 @@ function ConfirmationModal({ show, handleClose, message, onConfirm }) {
         <Button variant="secondary" onClick={handleClose}>
           Annuler
         </Button>
-        <Button variant="primary" onClick={onConfirm}>
-          Confirmer
+        <Button
+          variant="primary"
+          onClick={onConfirm}
+          disabled={isLoading} // Désactive le bouton lors du chargement
+        >
+          {isLoading ? (
+            <Spinner animation="border" size="sm" role="status" aria-hidden="true" />
+          ) : (
+            'Confirmer'
+          )}
         </Button>
       </Modal.Footer>
     </Modal>

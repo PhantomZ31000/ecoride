@@ -33,28 +33,34 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /**
+     * Trouve un utilisateur par son pseudo
+     *
+     * @param string $pseudo
+     * @return User[] Retourne un tableau d'utilisateurs
+     */
+    public function findByPseudo(string $pseudo): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.pseudo LIKE :pseudo')
+            ->setParameter('pseudo', '%' . $pseudo . '%')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Trouve un utilisateur par son email
+     *
+     * @param string $email
+     * @return User|null Retourne un utilisateur ou null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

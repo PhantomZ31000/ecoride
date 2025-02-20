@@ -16,8 +16,16 @@ function InscriptionForm() {
         setError(null); // Réinitialise les erreurs
         setSuccess(null); // Réinitialise le message de succès
 
+        // Vérification de la cohérence des mots de passe
         if (password !== confirmPassword) {
             setError('Les mots de passe ne correspondent pas.');
+            return;
+        }
+
+        // Vérification de la validité de l'email
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            setError('L\'adresse email n\'est pas valide.');
             return;
         }
 
@@ -27,7 +35,7 @@ function InscriptionForm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ pseudo, email, password }),
+                body: JSON.stringify({ pseudo, email, password }), // Envoie du mot de passe en texte brut
             });
 
             if (response.ok) {
@@ -46,7 +54,7 @@ function InscriptionForm() {
     };
 
     return (
-        <Form onSubmit={handleSubmit} className="inscription-form"> {/* Ajout d'une classe pour le style */}
+        <Form onSubmit={handleSubmit} className="inscription-form">
             {error && <Alert variant="danger">{error}</Alert>} {/* Affichage des erreurs */}
             {success && <Alert variant="success">{success}</Alert>} {/* Affichage du message de succès */}
 

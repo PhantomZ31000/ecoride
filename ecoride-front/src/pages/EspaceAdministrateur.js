@@ -7,13 +7,33 @@ import GestionComptes from '../components/GestionComptes';
 
 function EspaceAdministrateur() {
   return (
-    <div>
+    <div className="admin-dashboard">
       <h1>Espace Administrateur</h1>
-      <CreationCompteEmploye />
-      <GraphiqueCovoiturages />
-      <GraphiqueCredits />
-      <TotalCredits />
-      <GestionComptes />
+      
+      <section className="admin-section">
+        <h2>Création de compte Employé</h2>
+        <CreationCompteEmploye />
+      </section>
+
+      <section className="admin-section">
+        <h2>Graphique Covoiturages</h2>
+        <GraphiqueCovoiturages />
+      </section>
+
+      <section className="admin-section">
+        <h2>Graphique des Crédits</h2>
+        <GraphiqueCredits />
+      </section>
+
+      <section className="admin-section">
+        <h2>Total des Crédits</h2>
+        <TotalCredits />
+      </section>
+
+      <section className="admin-section">
+        <h2>Gestion des Comptes</h2>
+        <GestionComptes />
+      </section>
     </div>
   );
 }

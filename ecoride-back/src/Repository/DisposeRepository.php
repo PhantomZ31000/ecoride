@@ -16,28 +16,36 @@ class DisposeRepository extends ServiceEntityRepository
         parent::__construct($registry, Dispose::class);
     }
 
-    //    /**
-    //     * @return Dispose[] Returns an array of Dispose objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('d.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    // Méthode personnalisée pour rechercher un Dispose par un critère, exemple par ID ou autre champ.
+    /**
+     * Trouve les enregistrements Dispose par un critère spécifique
+     *
+     * @param string $field
+     * @param mixed $value
+     * @return Dispose[] Retourne un tableau de Dispose
+     */
+    public function findByField(string $field, $value): array
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.' . $field . ' = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Dispose
-    //    {
-    //        return $this->createQueryBuilder('d')
-    //            ->andWhere('d.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    // Exemple de méthode pour récupérer un Dispose spécifique par son ID
+    /**
+     * Trouve un enregistrement Dispose par son ID
+     *
+     * @param int $id
+     * @return Dispose|null Retourne un enregistrement Dispose ou null
+     */
+    public function findById(int $id): ?Dispose
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
