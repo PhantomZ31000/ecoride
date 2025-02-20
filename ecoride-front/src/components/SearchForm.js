@@ -10,7 +10,7 @@ function SearchForm() {
         event.preventDefault();
         // Logique d'appel API de recherche
         console.log("Recherche de :", depart, "à", arrivee);
-        // Votre logique d'appel API ici
+        
         fetch(`http://127.0.0.1:8000/api/covoiturages?depart=${depart}&arrivee=${arrivee}`)
             .then(response => response.json())
             .then(data => {

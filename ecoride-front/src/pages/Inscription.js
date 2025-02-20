@@ -11,8 +11,7 @@ function Inscription() {
     setError(null); // Réinitialiser l'erreur avant chaque soumission
 
     try {
-      // Logique de soumission du formulaire via une API ou autre
-      // Exemple d'appel API
+   
       const response = await fetch('API_URL', {
         method: 'POST',
         headers: {
@@ -25,8 +24,7 @@ function Inscription() {
         throw new Error('Une erreur est survenue lors de l\'inscription.');
       }
 
-      // Si tout va bien, réinitialisez ou redirigez vers une autre page
-      // Ex : navigate('/dashboard');
+      
     } catch (err) {
       setError(err.message);
     } finally {

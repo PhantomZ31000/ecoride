@@ -1,4 +1,4 @@
-/* src/components/InteractiveMap.css */.interactive-map {
+.interactive-map {
     height: 400px; /* Hauteur de la carte */
     width: 100%; /* Largeur de la carte */
     margin-top: 2rem; /* Marge supérieure */

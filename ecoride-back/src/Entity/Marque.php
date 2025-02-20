@@ -17,23 +17,23 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['marque:read']],
-            security: "is_granted('ROLE_ADMIN')" // Access control for GET
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['marque:list']],
-            security: "is_granted('ROLE_ADMIN')" // Access control for GET Collection
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Post(
             denormalizationContext: ['groups' => ['marque:create']],
             normalizationContext: ['groups' => ['marque:item']],
-            security: "is_granted('ROLE_ADMIN')" // Access control for POST
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Put(
             denormalizationContext: ['groups' => ['marque:update']],
-            security: "is_granted('ROLE_ADMIN')" // Access control for PUT
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Delete(
-            security: "is_granted('ROLE_ADMIN')" // Access control for DELETE
+            security: "is_granted('ROLE_ADMIN')" 
         )
     ],
     normalizationContext: ['groups' => ['marque:read']],

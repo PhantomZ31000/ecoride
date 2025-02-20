@@ -1,9 +1,9 @@
-/* src/components/ReservationButton.css */.reservation-button {
-    display: block; /* Affiche le bouton en tant que bloc */
-    width: 100%; /* Largeur du bouton */
+.reservation-button {
+    display: block;
+    width: 100%; 
     max-width: 300px; /* Largeur maximale du bouton */
-    margin: 2rem auto; /* Marge automatique pour centrer le bouton */
-    padding: 0.75rem 1.5rem; /* Espacement interne du bouton */
-    font-size: 1.1rem; /* Taille du texte du bouton */
+    margin: 2rem auto; 
+    padding: 0.75rem 1.5rem; 
+    font-size: 1.1rem;
     border-radius: 0.25rem; /* Coins arrondis */
   }

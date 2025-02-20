@@ -22,23 +22,23 @@ use ApiPlatform\Metadata\ApiFilter;
     operations: [
         new GetCollection(
             normalizationContext: ['groups' => ['voiture:list']],
-            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Get(
             normalizationContext: ['groups' => ['voiture:item']],
-            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Post(
             denormalizationContext: ['groups' => ['voiture:create']],
             normalizationContext: ['groups' => ['voiture:item']],
-            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Put(
             denormalizationContext: ['groups' => ['voiture:update']],
-            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Delete(
-            security: "is_granted('ROLE_ADMIN')" // Accessible only by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         )
     ],
 )]

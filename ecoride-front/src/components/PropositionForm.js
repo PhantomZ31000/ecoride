@@ -14,7 +14,7 @@ function PropositionForm() {
   const [voitureId, setVoitureId] = useState('');
 
   useEffect(() => {
-    const userId = 1; // Remplacez avec l'ID dynamique de l'utilisateur connecté si nécessaire
+    const userId = 1; 
 
     // Récupérer l'utilisateur connecté
     fetch(`http://127.0.0.1:8000/api/users/${userId}`)
@@ -23,7 +23,7 @@ function PropositionForm() {
       .catch((error) => console.error('Erreur lors de la récupération de l\'utilisateur:', error));
 
     // Récupérer les voitures de l'utilisateur
-    fetch('http://127.0.0.1:8000/api/voitures') // Vérifiez que cette URL est correcte
+    fetch('http://127.0.0.1:8000/api/voitures')
       .then((response) => response.json())
       .then((data) => setVoitures(data))
       .catch((error) => console.error('Erreur lors de la récupération des voitures:', error));

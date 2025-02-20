@@ -9,7 +9,7 @@ function CovoituragesProblemes() {
   useEffect(() => {
     const fetchCovoiturages = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/covoiturages?probleme=true'); // Remplacez par l'URL correcte de votre API
+        const response = await fetch('http://127.0.0.1:8000/api/covoiturages?probleme=true'); 
         if (!response.ok) {
           throw new Error('Impossible de récupérer les covoiturages problématiques');
         }

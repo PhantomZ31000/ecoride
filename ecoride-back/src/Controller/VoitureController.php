@@ -12,10 +12,10 @@ class VoitureController extends AbstractController
     #[Route('/voiture', name: 'app_voiture')]
     public function index(VoitureRepository $voitureRepository): JsonResponse
     {
-        // Fetching all voitures for the user
+        
         $voitures = $voitureRepository->findAll();
 
-        // Returning the list of voitures as JSON
+        
         return $this->json([
             'voitures' => $voitures,
         ]);

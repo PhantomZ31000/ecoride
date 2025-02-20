@@ -54,7 +54,6 @@ function UserProfile() {
               <strong>Date de naissance:</strong> {new Date(user.date_naissance).toLocaleDateString()}
             </p>
           )}
-          {/* Ajouter d'autres informations à afficher selon les données disponibles */}
         </Col>
       </Row>
     </Container>

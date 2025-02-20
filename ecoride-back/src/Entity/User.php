@@ -28,23 +28,23 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
     operations: [
         new GetCollection(
             normalizationContext: ['groups' => ['user:list']],
-            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Get(
             normalizationContext: ['groups' => ['user:item']],
-            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Post(
             denormalizationContext: ['groups' => ['user:create']],
             normalizationContext: ['groups' => ['user:item']],
-            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Put(
             denormalizationContext: ['groups' => ['user:update']],
-            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Delete(
-            security: "is_granted('ROLE_ADMIN')" // Only accessible by ADMIN users
+            security: "is_granted('ROLE_ADMIN')" 
         )
     ],
     filters: [SearchFilter::class],

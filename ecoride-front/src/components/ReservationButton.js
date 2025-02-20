@@ -8,7 +8,7 @@ function ReservationButton() {
   const handleClick = async () => {
     try {
       // Logique pour réserver une place via une API ou autre action
-      const response = await fetch('http://127.0.0.1:8000/api/reservation', { // Remplace l'URL par celle de ton API
+      const response = await fetch('http://127.0.0.1:8000/api/reservation', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

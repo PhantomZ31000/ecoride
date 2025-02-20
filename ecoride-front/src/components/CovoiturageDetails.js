@@ -52,15 +52,12 @@ function CovoiturageDetails({ covoiturageId }) {
       <Row>
         <Col md={4}>
           <h3>Conducteur</h3>
-          <p>{covoiturage.conducteur.pseudo}</p> {/* Assurez-vous que l'API renvoie les informations du conducteur */}
-          {/* Afficher les autres informations du conducteur (photo, note, etc.) */}
+          <p>{covoiturage.conducteur.pseudo}</p> 
           {/*... */}
         </Col>
         <Col md={4}>
           <h3>Voiture</h3>
-          <p>{covoiturage.voiture.modele}</p> {/* Assurez-vous que l'API renvoie les informations de la voiture */}
-          {/* Afficher les autres informations de la voiture (marque, couleur, etc.) */}
-          {/*... */}
+          <p>{covoiturage.voiture.modele}</p> 
         </Col>
         <Col md={4}>
           <h3>Détails du trajet</h3>

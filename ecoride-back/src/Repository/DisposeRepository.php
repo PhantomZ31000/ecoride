@@ -6,9 +6,7 @@ use App\Entity\Dispose;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Dispose>
- */
+
 class DisposeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -33,7 +31,7 @@ class DisposeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // Exemple de méthode pour récupérer un Dispose spécifique par son ID
+    
     /**
      * Trouve un enregistrement Dispose par son ID
      *

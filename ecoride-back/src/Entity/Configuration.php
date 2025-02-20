@@ -17,19 +17,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['configuration:read']],
-            security: "is_granted('ROLE_ADMIN')" // Access control for GET
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Post(
             denormalizationContext: ['groups' => ['configuration:write']],
             normalizationContext: ['groups' => ['configuration:read']],
-            security: "is_granted('ROLE_ADMIN')" // Access control for POST
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Put(
             denormalizationContext: ['groups' => ['configuration:write']],
-            security: "is_granted('ROLE_ADMIN')" // Access control for PUT
+            security: "is_granted('ROLE_ADMIN')" 
         ),
         new Delete(
-            security: "is_granted('ROLE_ADMIN')" // Access control for DELETE
+            security: "is_granted('ROLE_ADMIN')" 
         )
     ],
     normalizationContext: ['groups' => ['configuration:read']],

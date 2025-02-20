@@ -1,5 +1,3 @@
-/* src/components/GraphiqueCredits.css */.graphique-credits {
-  /* Styles pour le graphique des crédits */
-}.graphique-credits.recharts-wrapper {
+.graphique-credits.recharts-wrapper {
     margin-bottom: 2rem; /* Marge inférieure du graphique */
   }

@@ -1,27 +1,33 @@
-/* src/components/CovoiturageDetails.css */.covoiturage-details {
-    margin-bottom: 2rem; /* Marge inférieure */
-}.covoiturage-details h2 {
-  font-size: 2rem; /* Taille du titre */
-  margin-bottom: 0.5rem; /* Marge inférieure du titre */
-}.covoiturage-details p {
-  font-size: 1rem; /* Taille du texte */
-  margin-bottom: 0.5rem; /* Marge inférieure du texte */
-}.covoiturage-details h3 {
-  font-size: 1.5rem; /* Taille des sous-titres */
-  margin-bottom: 1rem; /* Marge inférieure des sous-titres */
-}.covoiturage-details.conducteur {
+.covoiturage-details {
+    margin-bottom: 2rem; 
+}
+.covoiturage-details h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem; 
+}
+.covoiturage-details p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem; 
+}
+.covoiturage-details h3 {
+  font-size: 1.5rem; 
+  margin-bottom: 1rem; 
+}
+.covoiturage-details.conducteur {
   /* Styles pour la section du conducteur */
-  border: 1px solid #dee2e6; /* Bordure */
-  padding: 1rem; /* Espacement interne */
-  border-radius: 0.25rem; /* Coins arrondis */
-}.covoiturage-details.voiture {
+  border: 1px solid #dee2e6; 
+  padding: 1rem; 
+  border-radius: 0.25rem; 
+}
+.covoiturage-details.voiture {
   /* Styles pour la section de la voiture */
-  border: 1px solid #dee2e6; /* Bordure */
-  padding: 1rem; /* Espacement interne */
-  border-radius: 0.25rem; /* Coins arrondis */
-}.covoiturage-details.details-trajet {
+  border: 1px solid #dee2e6; 
+  padding: 1rem; 
+  border-radius: 0.25rem; 
+}
+.covoiturage-details.details-trajet {
   /* Styles pour la section des détails du trajet */
-  border: 1px solid #dee2e6; /* Bordure */
-  padding: 1rem; /* Espacement interne */
-  border-radius: 0.25rem; /* Coins arrondis */
+  border: 1px solid #dee2e6; 
+  padding: 1rem; 
+  border-radius: 0.25rem; 
 }

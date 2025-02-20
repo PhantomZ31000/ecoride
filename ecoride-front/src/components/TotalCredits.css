@@ -1,8 +1,7 @@
-/* src/components/TotalCredits.css */.total-credits {
-  /* Styles pour l'affichage du total des crédits */
-  text-align: center; /* Centrer le texte */
+.total-credits {
+  text-align: center; 
   margin-bottom: 2rem; /* Marge inférieure */
 }.total-credits h3 {
-  font-size: 2rem; /* Taille du titre */
+  font-size: 2rem; 
   margin-bottom: 0; /* Supprimer la marge inférieure du titre */
 }

@@ -13,7 +13,6 @@ function AvisList({ avis }) {
         <div key={avi.id} className="avis-item">
           <p><strong>Commentaire:</strong> {avi.commentaire}</p>
           <p><strong>Note:</strong> {avi.note} / 5</p>
-          {/* Si tu as un auteur ou une date, tu peux les afficher ici */}
           {avi.auteur && <p><strong>Auteur:</strong> {avi.auteur}</p>}
           {avi.date && <p><strong>Date:</strong> {avi.date}</p>}
         </div>

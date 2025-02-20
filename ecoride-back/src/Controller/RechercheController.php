@@ -17,10 +17,10 @@ class RechercheController extends AbstractController
         $arrivee = $request->query->get('arrivee');
         $date = $request->query->get('date');
 
-        // Searching covoiturages based on the provided criteria
+        
         $covoiturages = $covoiturageRepository->findByCriteria($depart, $arrivee, $date);
 
-        // Serialize the data to make it JSON-friendly
+        
         $data = [];
         foreach ($covoiturages as $covoiturage) {
             $data[] = [
