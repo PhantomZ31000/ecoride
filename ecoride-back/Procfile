@@ -1,2 +1,2 @@
 release: composer install --no-dev --optimize-autoloader
-web: heroku-php-apache2 public/
+web: heroku-php-apache2 
